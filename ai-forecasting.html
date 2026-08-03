@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI forecasting — solar generation prediction, load demand prediction, weather-based forecasting, smart load scheduling, battery prediction and predictive maintenance." />
+  <title>AI Forecasting | SolarGrid MPPT</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("sg-theme");
+      if (!t) {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+  </script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <header id="nav"></header>
+
+  <main>
+    <section class="page-hero">
+      <canvas id="energyCanvas" data-particles aria-hidden="true"></canvas>
+      <div class="container">
+        <div class="eyebrow reveal visible"><span class="dot"></span> AI Forecasting</div>
+        <h1 class="reveal visible">Energy, <span class="grad-text">Predicted Before It Happens</span></h1>
+        <p class="reveal reveal-d1 visible">Machine-learning models analyze weather, historical generation and usage patterns to forecast solar output, load demand and battery state — turning reactive energy management into proactive control.</p>
+        <div class="crumbs reveal reveal-d2 visible"><a href="index.html">Home</a> <span>&#8250;</span> <span style="color:var(--yellow)">AI Forecasting</span></div>
+      </div>
+    </section>
+
+    <!-- ============ FORECAST ACCURACY ============ -->
+    <section class="section" style="padding-top:20px">
+      <div class="container">
+        <div class="stat-band reveal">
+          <div class="stat">
+            <div class="num grad-text" data-count="94.2" data-decimals="1" data-suffix="%"><span></span></div>
+            <div class="lbl">Solar Forecast Accuracy</div>
+          </div>
+          <div class="stat">
+            <div class="num" style="color:var(--cyan)" data-count="96.8" data-decimals="1" data-suffix="%"><span></span></div>
+            <div class="lbl">Load Forecast Accuracy</div>
+          </div>
+          <div class="stat">
+            <div class="num" style="color:var(--green)" data-count="48" data-suffix="h"><span></span></div>
+            <div class="lbl">Forecast Horizon</div>
+          </div>
+          <div class="stat">
+            <div class="num" style="color:var(--yellow)" data-count="14" data-suffix=" days"><span></span></div>
+            <div class="lbl">Failures Predicted Ahead</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SOLAR + LOAD FORECAST ============ -->
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="grid-2">
+          <div class="card chart-card reveal">
+            <div class="cc-head">
+              <h3>Solar Generation Prediction</h3>
+              <span class="chip cyan">NEXT 24h</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="solarForecastChart"></canvas>
+            </div>
+          </div>
+          <div class="card chart-card reveal reveal-d1">
+            <div class="cc-head">
+              <h3>Load Demand Prediction</h3>
+              <span class="chip yellow">NEXT 24h</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="loadForecastChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WEATHER + BATTERY ============ -->
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="grid-2">
+          <div class="card chart-card reveal">
+            <div class="cc-head">
+              <h3>Weather-Based Solar Forecast</h3>
+              <span class="chip green">7 DAYS</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="weatherChart"></canvas>
+            </div>
+          </div>
+          <div class="card chart-card reveal reveal-d1">
+            <div class="cc-head">
+              <h3>Battery Charge / Discharge Prediction</h3>
+              <span class="chip cyan">10 DAYS</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="battPredChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MAINTENANCE + SMART SCHEDULING ============ -->
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="grid-2">
+          <div class="card chart-card reveal">
+            <div class="cc-head">
+              <h3>Predictive Maintenance</h3>
+              <span class="chip red">HEALTH INDEX</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="maintChart"></canvas>
+            </div>
+            <div style="margin-top:14px" class="chip green">&#128073; Action: Replace cooling fan within 21 days</div>
+          </div>
+          <div class="card reveal">
+            <div class="cc-head">
+              <h3>Smart Load Scheduling</h3>
+              <span class="chip green">AUTO-OPTIMIZED</span>
+            </div>
+            <div class="dash-stack">
+              <div class="alert-item ok" style="animation:none">
+                <span class="a-ic">&#128200;</span>
+                <div><p><b style="color:#fff">Water pump</b> shifted to solar peak 11:30&ndash;14:30 (max irradiance)</p><span class="a-t">OPTIMIZER &middot; SAVES 18%</span></div>
+              </div>
+              <div class="alert-item warn" style="animation:none">
+                <span class="a-ic">&#128200;</span>
+                <div><p><b style="color:#fff">Cooling system</b> pre-cooled at 09:00 using battery surplus</p><span class="a-t">OPTIMIZER &middot; SAVES 12%</span></div>
+              </div>
+              <div class="alert-item info" style="animation:none">
+                <span class="a-ic">&#128200;</span>
+                <div><p><b style="color:#fff">EV charger</b> scheduled for 22:00 off-peak window</p><span class="a-t">OPTIMIZER &middot; SAVES 21%</span></div>
+              </div>
+              <div class="alert-item ok" style="animation:none">
+                <span class="a-ic">&#128200;</span>
+                <div><p><b style="color:#fff">Irrigation</b> scheduled by 48h rain forecast</p><span class="a-t">OPTIMIZER &middot; SAVES 26%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ AI CAPABILITIES ============ -->
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow"><span class="dot"></span> AI Capabilities</div>
+          <h2>Six Models, <span class="grad-cyan-green">One Intelligent System</span></h2>
+        </div>
+        <div class="grid-3">
+          <div class="card reveal">
+            <div class="icn"><span>&#9728;</span></div>
+            <h3>Solar Generation Prediction</h3>
+            <p>Forecasts PV output from irradiance forecasts and panel health to plan the day ahead.</p>
+          </div>
+          <div class="card reveal reveal-d1">
+            <div class="icn cyan"><span>&#127776;</span></div>
+            <h3>Load Demand Prediction</h3>
+            <p>Learns usage habits and predicts consumption to balance supply and demand.</p>
+          </div>
+          <div class="card reveal reveal-d2">
+            <div class="icn green"><span>&#9729;</span></div>
+            <h3>Weather-Based Forecasting</h3>
+            <p>Integrates live weather feeds to adapt generation and storage strategies.</p>
+          </div>
+          <div class="card reveal">
+            <div class="icn"><span>&#128197;</span></div>
+            <h3>Smart Load Scheduling</h3>
+            <p>Automatically moves flexible loads to solar-peak and off-peak windows.</p>
+          </div>
+          <div class="card reveal reveal-d1">
+            <div class="icn cyan"><span>&#128267;</span></div>
+            <h3>Battery Prediction</h3>
+            <p>Projects state-of-charge to protect battery health and avoid deep discharge.</p>
+          </div>
+          <div class="card reveal reveal-d2">
+            <div class="icn green"><span>&#128295;</span></div>
+            <h3>Predictive Maintenance</h3>
+            <p>Detects degradation early and schedules maintenance before failure occurs.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>Every Feature Is <span class="grad-text">Securely Protected</span></h2>
+          <p>Encrypted communication, role-based access and complete audit logging keep your microgrid safe.</p>
+          <a href="security.html" class="btn btn-primary btn-lg">Explore Security <span>&#10148;</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/charts.js"></script>
+</body>
+</html>

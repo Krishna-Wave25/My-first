@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Security — secure IoT communication, user login, encrypted cloud data, role-based access, fault logging and system alert history." />
+  <title>Security | SolarGrid MPPT</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("sg-theme");
+      if (!t) {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+  </script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <header id="nav"></header>
+
+  <main>
+    <section class="page-hero">
+      <canvas id="energyCanvas" data-particles aria-hidden="true"></canvas>
+      <div class="container">
+        <div class="eyebrow reveal visible"><span class="dot"></span> Security</div>
+        <h1 class="reveal visible">Secured From <span class="grad-cyan-green">Panel to Cloud</span></h1>
+        <p class="reveal reveal-d1 visible">Encrypted telemetry, authenticated users, role-based access and a complete audit trail protect the microgrid at every layer.</p>
+        <div class="crumbs reveal reveal-d2 visible"><a href="index.html">Home</a> <span>&#8250;</span> <span style="color:var(--yellow)">Security</span></div>
+      </div>
+    </section>
+
+    <!-- ============ SHIELD VISUAL + FEATURES ============ -->
+    <section class="section" style="padding-top:20px">
+      <div class="container">
+        <div class="split">
+          <div class="reveal">
+            <div class="shield-visual">
+              <div class="sec-ring r1"></div>
+              <div class="sec-ring r2"></div>
+              <div class="sec-ring r3"></div>
+              <div class="shield-core">&#128737;</div>
+            </div>
+            <div class="text-center">
+              <span class="chip green">&#128274; END-TO-END ENCRYPTION ACTIVE</span>
+            </div>
+          </div>
+          <div class="grid-2 reveal reveal-d2">
+            <div class="card">
+              <div class="icn"><span>&#128274;</span></div>
+              <h3>Secure IoT Communication</h3>
+              <p>All sensor and control traffic is encrypted over MQTT/TLS with per-device certificates.</p>
+            </div>
+            <div class="card">
+              <div class="icn cyan"><span>&#128100;</span></div>
+              <h3>User Login System</h3>
+              <p>Two-factor-ready authentication protects access to the dashboard and control functions.</p>
+            </div>
+            <div class="card">
+              <div class="icn green"><span>&#128273;</span></div>
+              <h3>Encrypted Cloud Data</h3>
+              <p>Time-series data is encrypted at rest and in transit with rotating keys.</p>
+            </div>
+            <div class="card">
+              <div class="icn"><span>&#128295;</span></div>
+              <h3>Role-Based Access</h3>
+              <p>Admin, operator and viewer roles with granular permissions on every action.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAULT LOGGING + ALERT HISTORY ============ -->
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow"><span class="dot"></span> Audit &amp; Monitoring</div>
+          <h2>Every Event, <span class="grad-text">Logged Forever</span></h2>
+        </div>
+        <div class="grid-2">
+          <div class="card chart-card reveal">
+            <div class="cc-head">
+              <h3>Fault Logging</h3>
+              <span class="chip red">AUDIT TRAIL</span>
+            </div>
+            <div class="alerts" style="max-height:320px">
+              <div class="alert-item err" style="animation:none">
+                <span class="a-ic">&#10007;</span>
+                <div><p>Inverter over-temperature 71&deg;C &mdash; load shed</p><span class="a-t">FAULT &middot; 2026-08-03 14:22:08</span></div>
+              </div>
+              <div class="alert-item ok" style="animation:none">
+                <span class="a-ic">&#10003;</span>
+                <div><p>Fault cleared &mdash; system restored</p><span class="a-t">FAULT &middot; 2026-08-03 14:29:41</span></div>
+              </div>
+              <div class="alert-item warn" style="animation:none">
+                <span class="a-ic">&#9888;</span>
+                <div><p>Battery SOC below 40% &mdash; load shedding engaged</p><span class="a-t">WARN &middot; 2026-08-02 05:14:33</span></div>
+              </div>
+              <div class="alert-item info" style="animation:none">
+                <span class="a-ic">&#9432;</span>
+                <div><p>Controller firmware updated to v2.4.1</p><span class="a-t">SYS &middot; 2026-08-01 02:00:00</span></div>
+              </div>
+              <div class="alert-item warn" style="animation:none">
+                <span class="a-ic">&#9888;</span>
+                <div><p>Irradiance drop 38% &mdash; cloud cover detected</p><span class="a-t">WARN &middot; 2026-07-31 16:47:12</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="card chart-card reveal reveal-d1">
+            <div class="cc-head">
+              <h3>System Alert History</h3>
+              <span class="chip cyan">30 DAYS</span>
+            </div>
+            <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px">
+              <span class="chip green">&#10003; 212 resolved</span>
+              <span class="chip yellow">&#9888; 18 warnings</span>
+              <span class="chip red">&#10007; 2 faults</span>
+            </div>
+            <div class="alerts" style="max-height:320px">
+              <div class="alert-item info" style="animation:none">
+                <span class="a-ic">&#9432;</span>
+                <div><p>User <b style="color:#fff">operator@site</b> toggled relay 2 (Water Pump) ON</p><span class="a-t">ACTION &middot; 2026-08-03 10:12:45</span></div>
+              </div>
+              <div class="alert-item info" style="animation:none">
+                <span class="a-ic">&#9432;</span>
+                <div><p>User <b style="color:#fff">admin@site</b> updated MPPT algorithm to AI-Based</p><span class="a-t">ACTION &middot; 2026-08-02 18:05:11</span></div>
+              </div>
+              <div class="alert-item warn" style="animation:none">
+                <span class="a-ic">&#9888;</span>
+                <div><p>Failed login attempt from unknown device &mdash; blocked</p><span class="a-t">SEC &middot; 2026-08-02 03:21:56</span></div>
+              </div>
+              <div class="alert-item ok" style="animation:none">
+                <span class="a-ic">&#10003;</span>
+                <div><p>Scheduled monthly report exported to PDF</p><span class="a-t">SYS &middot; 2026-08-01 00:05:00</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SECURITY LAYERS ============ -->
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow"><span class="dot"></span> Defense in Depth</div>
+          <h2>Multi-Layer <span class="grad-cyan-green">Protection</span></h2>
+        </div>
+        <div class="grid-4">
+          <div class="card reveal">
+            <div class="icn"><span>&#128274;</span></div>
+            <h3>Device Layer</h3>
+            <p>Hardware ID, secure boot and per-device certificates prevent spoofing.</p>
+          </div>
+          <div class="card reveal reveal-d1">
+            <div class="icn cyan"><span>&#128225;</span></div>
+            <h3>Network Layer</h3>
+            <p>Encrypted MQTT/TLS, private gateways and traffic anomaly detection.</p>
+          </div>
+          <div class="card reveal reveal-d2">
+            <div class="icn green"><span>&#9729;</span></div>
+            <h3>Cloud Layer</h3>
+            <p>Encrypted storage, access keys, rate limiting and intrusion monitoring.</p>
+          </div>
+          <div class="card reveal reveal-d3">
+            <div class="icn"><span>&#128100;</span></div>
+            <h3>User Layer</h3>
+            <p>Strong authentication, role-based access and session management.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>See Where the System <span class="grad-text">Can Be Deployed</span></h2>
+          <p>From rural villages to smart cities — explore the applications of this microgrid platform.</p>
+          <a href="applications.html" class="btn btn-primary btn-lg">View Applications <span>&#10148;</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Team & About — project abstract, objectives, methodology, results and the engineering team behind the IoT-based solar microgrid with MPPT." />
+  <title>Team & About | SolarGrid MPPT</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("sg-theme");
+      if (!t) {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+  </script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <header id="nav"></header>
+
+  <main>
+    <section class="page-hero">
+      <canvas id="energyCanvas" data-particles aria-hidden="true"></canvas>
+      <div class="container">
+        <div class="eyebrow reveal visible"><span class="dot"></span> Team &amp; About</div>
+        <h1 class="reveal visible">The Project &amp; the <span class="grad-cyan-green">People Behind It</span></h1>
+        <p class="reveal reveal-d1 visible">A final-year engineering project combining power electronics, IoT, cloud computing and machine learning into a single intelligent microgrid platform.</p>
+        <div class="crumbs reveal reveal-d2 visible"><a href="index.html">Home</a> <span>&#8250;</span> <span style="color:var(--yellow)">Team &amp; About</span></div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT BLOCKS ============ -->
+    <section class="section" style="padding-top:20px">
+      <div class="container">
+        <div class="about-blocks">
+          <div class="about-block reveal">
+            <h3><span class="n">01</span> Abstract</h3>
+            <p style="font-style:italic;border-left:3px solid var(--yellow);padding-left:16px;color:var(--slate-300)">
+              This project presents an <b style="color:#fff">IoT-Based Solar Microgrid Energy Management System with Maximum Power Point Tracking (MPPT)</b>. The system integrates photovoltaic generation, MPPT charge control, battery storage and IoT-based monitoring to maximize solar utilization and deliver real-time energy intelligence. An ESP32 controller samples voltage, current, temperature and load data, publishes it over MQTT to a cloud database, and renders it on a live web dashboard with fault detection and AI-based energy forecasting.
+            </p>
+          </div>
+
+          <div class="about-block reveal">
+            <h3><span class="n">02</span> Objectives</h3>
+            <div class="objectives">
+              <div class="objective"><span class="n">1</span> Maximize solar power extraction using MPPT algorithms.</div>
+              <div class="objective"><span class="n">2</span> Monitor voltage, current, power, temperature and battery state in real time.</div>
+              <div class="objective"><span class="n">3</span> Store telemetry in a cloud database and visualize it on a web dashboard.</div>
+              <div class="objective"><span class="n">4</span> Detect faults automatically and enable remote load control.</div>
+              <div class="objective"><span class="n">5</span> Predict solar generation and load demand using machine learning.</div>
+              <div class="objective"><span class="n">6</span> Improve system efficiency, reliability and battery longevity.</div>
+            </div>
+          </div>
+
+          <div class="about-block reveal">
+            <h3><span class="n">03</span> Methodology</h3>
+            <p>Hardware was prototyped around a 1.28 kWp PV array feeding an MPPT charge controller and a 4.8 kWh LiFePO₄ battery bank. Sensor nodes stream telemetry to an ESP32, which publishes encrypted MQTT messages to a cloud broker. The dashboard subscribes to live channels, stores time-series history, runs fault-detection rules and hosts an AI forecasting pipeline that predicts generation from weather data. System performance was validated over multiple sunny, cloudy and shaded days.</p>
+          </div>
+
+          <div class="about-block reveal">
+            <h3><span class="n">04</span> Key Results</h3>
+            <div class="stat-band" style="padding:28px 24px">
+              <div class="stat"><div class="num grad-text" data-count="98.2" data-decimals="1" data-suffix="%"><span></span></div><div class="lbl">MPPT Tracking</div></div>
+              <div class="stat"><div class="num" style="color:var(--green)" data-count="30" data-suffix="%"><span></span></div><div class="lbl">Yield vs Fixed</div></div>
+              <div class="stat"><div class="num" style="color:var(--cyan)" data-count="92" data-suffix="%"><span></span></div><div class="lbl">Grid Offset</div></div>
+              <div class="stat"><div class="num" style="color:var(--yellow)" data-count="1.8" data-decimals="1" data-suffix=" t"><span></span></div><div class="lbl">CO₂ / Year</div></div>
+            </div>
+          </div>
+
+          <div class="about-block reveal">
+            <h3><span class="n">05</span> Project Information</h3>
+            <div class="comp-specs">
+              <div class="comp-spec"><span>Program</span><b>B.E. Electrical &amp; Electronics Engineering</b></div>
+              <div class="comp-spec"><span>Institution</span><b>Your University Name (placeholder)</b></div>
+              <div class="comp-spec"><span>Academic Year</span><b>2025 – 2026</b></div>
+              <div class="comp-spec"><span>Course</span><b>Final Year Project — Major</b></div>
+              <div class="comp-spec"><span>Keywords</span><b>IoT · MPPT · Microgrid · ESP32 · MQTT · AI Forecasting</b></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TEAM ============ -->
+    <section class="section" style="padding-top:20px">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow"><span class="dot"></span> The Team</div>
+          <h2>Engineering the <span class="grad-text">Smart Grid</span></h2>
+          <p>Students and guide who designed, built and validated the system. <i>(Replace with real names &amp; photos.)</i></p>
+        </div>
+        <div class="team-grid">
+          <div class="member-card reveal">
+            <div class="member-avatar" style="background:linear-gradient(145deg,#ffc800,#ff7a00)">A</div>
+            <h3>Student 1</h3>
+            <div class="role">Power Electronics Lead</div>
+            <p>MPPT algorithms, DC-DC converter design and battery management.</p>
+            <div class="member-links">
+              <a href="https://github.com" target="_blank" rel="noopener" aria-label="GitHub">&#128279;</a>
+              <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn">&#128100;</a>
+              <a href="mailto:student1@example.com" aria-label="Email">&#9993;</a>
+            </div>
+          </div>
+          <div class="member-card reveal reveal-d1">
+            <div class="member-avatar" style="background:linear-gradient(145deg,#00e5ff,#0099c9)">B</div>
+            <h3>Student 2</h3>
+            <div class="role">IoT &amp; Firmware Lead</div>
+            <p>ESP32 firmware, sensor interfacing, MQTT telemetry and relay control.</p>
+            <div class="member-links">
+              <a href="https://github.com" target="_blank" rel="noopener" aria-label="GitHub">&#128279;</a>
+              <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn">&#128100;</a>
+              <a href="mailto:student2@example.com" aria-label="Email">&#9993;</a>
+            </div>
+          </div>
+          <div class="member-card reveal reveal-d2">
+            <div class="member-avatar" style="background:linear-gradient(145deg,#00e676,#00a65c)">C</div>
+            <h3>Student 3</h3>
+            <div class="role">Cloud &amp; Full-Stack Dev</div>
+            <p>Cloud database, web dashboard, analytics and data-visualization layer.</p>
+            <div class="member-links">
+              <a href="https://github.com" target="_blank" rel="noopener" aria-label="GitHub">&#128279;</a>
+              <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn">&#128100;</a>
+              <a href="mailto:student3@example.com" aria-label="Email">&#9993;</a>
+            </div>
+          </div>
+          <div class="member-card reveal reveal-d3">
+            <div class="member-avatar" style="background:linear-gradient(145deg,#00e5ff,#00e676)">D</div>
+            <h3>Student 4</h3>
+            <div class="role">AI &amp; Forecasting</div>
+            <p>Machine-learning models for solar, load, battery and maintenance prediction.</p>
+            <div class="member-links">
+              <a href="https://github.com" target="_blank" rel="noopener" aria-label="GitHub">&#128279;</a>
+              <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn">&#128100;</a>
+              <a href="mailto:student4@example.com" aria-label="Email">&#9993;</a>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-3 reveal">
+          <span class="chip green">&#128214; Project Guide: Prof. Guide Name (placeholder)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:20px">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>Need the Full <span class="grad-text">Project Document?</span></h2>
+          <p>Download the IEEE-style brochure covering the abstract, system design, MPPT algorithms, results and future scope.</p>
+          <div class="dl-row" style="justify-content:center">
+            <a href="assets/SolarGrid_MPPT_Brochure.pdf" class="btn btn-primary btn-lg" download><span class="file-ic">&#128196;</span> Download PDF Brochure</a>
+            <a href="contact.html" class="btn btn-ghost btn-lg">Contact the Team</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

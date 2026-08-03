@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Real-time IoT dashboard — MQTT telemetry, animated energy flow, live sensor charts, fault detection and AI weather-based prediction." />
+  <title>Live Dashboard | SolarGrid MPPT</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("sg-theme");
+      if (!t) {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+  </script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <header id="nav"></header>
+
+  <main>
+    <section class="page-hero" id="top">
+      <canvas id="energyCanvas" data-particles aria-hidden="true"></canvas>
+      <div class="container">
+        <div class="eyebrow reveal visible"><span class="dot"></span> Live Dashboard</div>
+        <h1 class="reveal visible">Real-time <span class="grad-cyan-green">Microgrid Control Center</span></h1>
+        <p class="reveal reveal-d1 visible">Live telemetry streamed over a simulated MQTT broker (ESP32 → Cloud → Dashboard), updated every second with AI weather forecasting.</p>
+        <div class="dash-meta reveal reveal-d2 visible">
+          <span class="conn-indicator" id="connChip"><span class="pulse-dot"></span> CONNECTING&hellip;</span>
+          <span class="chip green" id="gridChip">&#9679; OFF-GRID MODE</span>
+          <span class="chip" id="clockChip">SYNCED 00:00:00</span>
+          <span class="chip yellow" id="netChip">NET FLOW &mdash; CHARGING</span>
+        </div>
+        <div id="faultBanner" style="display:none;margin-top:20px" class="reveal visible">
+          <div class="card" style="border-color:rgba(255,77,109,.5);background:linear-gradient(120deg,rgba(255,77,109,.12),rgba(255,77,109,.04));display:flex;gap:14px;align-items:center;padding:18px 22px">
+            <span style="font-size:22px;color:var(--red)">&#9888;</span>
+            <div>
+              <b style="color:#fff;font-family:var(--font-head);display:block" id="faultTitle">FAULT DETECTED</b>
+              <span id="faultDesc" style="font-size:13.5px;color:var(--slate-400)"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ KPI GRID ============ -->
+    <section class="section" style="padding-top:30px">
+      <div class="container">
+        <div class="kpi-grid">
+          <div class="kpi tone-yellow reveal visible">
+            <div class="k-head"><div class="k-ic">&#9889;</div><span class="k-tag" style="background:rgba(255,200,0,.12);color:var(--yellow)">SOLAR</span></div>
+            <div class="k-val" id="kVolt">37.4 <small>V</small></div>
+            <div class="k-label">Solar Panel Voltage</div>
+            <div class="k-trend" style="color:var(--green)">&#9650; MPPT tracking</div>
+          </div>
+          <div class="kpi tone-cyan reveal visible">
+            <div class="k-head"><div class="k-ic">&#128266;</div><span class="k-tag" style="background:rgba(0,229,255,.12);color:var(--cyan)">SOLAR</span></div>
+            <div class="k-val" id="kAmp">8.2 <small>A</small></div>
+            <div class="k-label">Solar Array Current</div>
+            <div class="k-trend" style="color:var(--slate-400)">Array of 4 panels</div>
+          </div>
+          <div class="kpi tone-yellow reveal visible">
+            <div class="k-head"><div class="k-ic">&#9728;</div><span class="k-tag" style="background:rgba(255,200,0,.12);color:var(--yellow)">GEN</span></div>
+            <div class="k-val" id="kPower">1,248 <small>W</small></div>
+            <div class="k-label">Solar Power Generation</div>
+            <div class="k-bar"><i id="kPowerBar" style="width:62%"></i></div>
+          </div>
+          <div class="kpi tone-cyan reveal visible">
+            <div class="k-head"><div class="k-ic">&#128267;</div><span class="k-tag" style="background:rgba(0,229,255,.12);color:var(--cyan)">STORAGE</span></div>
+            <div class="k-val" id="kBatt">82 <small>%</small></div>
+            <div class="k-label">Battery Level</div>
+            <div class="k-bar"><i id="kBattBar" style="width:82%;background:var(--grad-energy)"></i></div>
+          </div>
+          <div class="kpi tone-green reveal visible">
+            <div class="k-head"><div class="k-ic">&#127776;</div><span class="k-tag" style="background:rgba(0,230,118,.12);color:var(--green)">LOAD</span></div>
+            <div class="k-val" id="kLoad">640 <small>W</small></div>
+            <div class="k-label">Active Load Consumption</div>
+            <div class="k-bar"><i id="kLoadBar" style="width:64%;background:linear-gradient(90deg,#00e676,#5df5a3)"></i></div>
+          </div>
+          <div class="kpi tone-red reveal visible">
+            <div class="k-head"><div class="k-ic">&#127777;</div><span class="k-tag" style="background:rgba(255,171,46,.14);color:var(--orange)">ENV</span></div>
+            <div class="k-val" id="kTemp">31.2 <small>&deg;C</small></div>
+            <div class="k-label">Ambient Temperature</div>
+            <div class="k-bar"><i id="kTempBar" style="width:31%;background:linear-gradient(90deg,#ffab2e,#ff7a00)"></i></div>
+          </div>
+          <div class="kpi tone-green reveal visible">
+            <div class="k-head"><div class="k-ic">&#128200;</div><span class="k-tag" style="background:rgba(0,230,118,.12);color:var(--green)">PERF</span></div>
+            <div class="k-val" id="kEff">96.4 <small>%</small></div>
+            <div class="k-label">System Efficiency</div>
+            <div class="k-bar"><i id="kEffBar" style="width:96%;background:linear-gradient(90deg,#00e5ff,#00e676)"></i></div>
+          </div>
+          <div class="kpi tone-green reveal visible">
+            <div class="k-head"><div class="k-ic">&#127793;</div><span class="k-tag" style="background:rgba(0,230,118,.12);color:var(--green)">ECO</span></div>
+            <div class="k-val" id="kCo2">6.2 <small>kg</small></div>
+            <div class="k-label">CO&#8322; Saved Today</div>
+            <div class="k-trend" style="color:var(--green)">&#9650; +0.4 kg</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ENERGY FLOW + MQTT CONSOLE ============ -->
+    <section class="section" style="padding-top:10px">
+      <div class="container">
+        <div class="dash-grid">
+          <div class="card reveal" style="padding:0;overflow:hidden">
+            <div style="padding:22px 24px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+              <h3 style="font-size:16px">Animated Energy Flow</h3>
+              <span class="chip green">&#9679; POWER PATH LIVE</span>
+            </div>
+            <div id="energyFlow" style="padding:10px 16px 20px"></div>
+          </div>
+
+          <div class="card reveal reveal-d1" style="padding:0;overflow:hidden">
+            <div class="console-panel">
+              <div class="console-head">
+                <div class="dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+                <span style="color:var(--slate-300);font-size:12px">MQTT / Firebase Console &mdash; <span style="color:var(--cyan)">broker.hivemq.com:1883</span></span>
+              </div>
+              <div class="console-body" id="mqttLog">
+                <div class="mqtt-row"><span class="dir">&gt;</span><span class="topic">solargrid/status/connection</span><span class="payload">connecting client&hellip;</span></div>
+              </div>
+              <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px" class="mqtt-topics" id="mqttTopics"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CHARTS ============ -->
+    <section class="section" style="padding-top:10px">
+      <div class="container">
+        <div class="dash-grid">
+          <div class="dash-stack">
+            <div class="card chart-card reveal">
+              <div class="cc-head">
+                <h3>Solar Generation vs Load &amp; AI Forecast</h3>
+                <span class="sub" id="chartTime">LIVE &middot; ROLLING 60s</span>
+              </div>
+              <div class="chart-box">
+                <canvas id="powerChart"></canvas>
+              </div>
+            </div>
+
+            <!-- ============ TELEMETRY LIVE CHARTS ============ -->
+            <div class="card chart-card reveal reveal-d1">
+              <div class="cc-head">
+                <h3>Live Sensor Telemetry</h3>
+                <span class="chip cyan">7 CHANNELS &middot; 10 Hz STREAM</span>
+              </div>
+              <div class="tele-grid" id="teleGrid"></div>
+            </div>
+
+            <div class="card chart-card reveal reveal-d2">
+              <div class="cc-head">
+                <h3>Remote Load Control</h3>
+                <span class="chip cyan">IoT RELAY</span>
+              </div>
+              <div class="load-controls">
+                <button class="load-btn on" data-load="lights">
+                  <span class="sw"></span>
+                  <div><b>Lighting Circuit</b><span>Zone A &middot; Relay 1</span></div>
+                  <span class="lb-w" id="wLights">120 W</span>
+                </button>
+                <button class="load-btn on" data-load="pump">
+                  <span class="sw"></span>
+                  <div><b>Water Pump</b><span>Irrigation &middot; Relay 2</span></div>
+                  <span class="lb-w" id="wPump">280 W</span>
+                </button>
+                <button class="load-btn on" data-load="fan">
+                  <span class="sw"></span>
+                  <div><b>Cooling / Fan</b><span>Ventilation &middot; Relay 3</span></div>
+                  <span class="lb-w" id="wFan">140 W</span>
+                </button>
+                <button class="load-btn" data-load="backup">
+                  <span class="sw"></span>
+                  <div><b>Backup Outlet</b><span>Standby &middot; Relay 4</span></div>
+                  <span class="lb-w" id="wBackup">0 W</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="dash-stack">
+            <div class="card chart-card reveal">
+              <div class="cc-head">
+                <h3>Battery State</h3>
+                <span class="sub">SOC</span>
+              </div>
+              <div class="chart-box small">
+                <canvas id="battChart"></canvas>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;color:var(--slate-500);margin-top:10px">
+                <span>BATT: <b id="battRate" style="color:var(--green)">+1.2 A</b></span>
+                <span>VOLTAGE: <b id="battVolt" style="color:var(--cyan)">51.4 V</b></span>
+              </div>
+            </div>
+
+            <div class="card chart-card reveal reveal-d1">
+              <div class="cc-head">
+                <h3>Load Distribution</h3>
+                <span class="sub">BY CIRCUIT</span>
+              </div>
+              <div class="chart-box small">
+                <canvas id="loadChart"></canvas>
+              </div>
+            </div>
+
+            <!-- ============ FAULT DETECTION ============ -->
+            <div class="card chart-card reveal reveal-d1">
+              <div class="cc-head">
+                <h3>Fault Detection &amp; Alerts</h3>
+                <span class="chip red">AUTO-SCAN</span>
+              </div>
+              <div class="fault-status" id="faultStatus">
+                <div class="fs-ic">&#10003;</div>
+                <div><b>All Systems Normal</b><span>No active faults &middot; last scan 0s ago</span></div>
+              </div>
+              <div style="margin-top:16px;max-height:210px;overflow-y:auto">
+                <table class="fault-table">
+                  <thead><tr><th>Time</th><th>Code</th><th>Event</th><th>Severity</th></tr></thead>
+                  <tbody id="faultTable"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- ============ AI WEATHER PREDICTION ============ -->
+            <div class="card chart-card reveal reveal-d2">
+              <div class="cc-head">
+                <h3>AI Weather-Based Prediction</h3>
+                <span class="chip green">NEXT 7 DAYS</span>
+              </div>
+              <div class="weather-grid" id="weatherGrid"></div>
+              <div style="margin-top:14px;font-family:var(--font-mono);font-size:12px;color:var(--slate-400);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px">
+                <span>Today&rsquo;s forecast: <b id="predToday" style="color:var(--yellow)">9.6 kWh</b></span>
+                <span>Accuracy: <b style="color:var(--green)">94.2%</b></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>Explore the <span class="grad-text">Interactive Circuit</span></h2>
+          <p>See every component wired up — click any block for its full specification.</p>
+          <div class="dl-row" style="justify-content:center">
+            <a href="circuit.html" class="btn btn-primary btn-lg">Open Circuit Diagram <span>&#10148;</span></a>
+            <a href="assets/SolarGrid_MPPT_Brochure.pdf" class="btn btn-ghost btn-lg" download>Download IEEE Brochure</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/sim.js"></script>
+  <script src="js/energyflow.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

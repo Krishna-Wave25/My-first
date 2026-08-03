@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Energy analytics — daily generation, monthly reports, battery charge/discharge, load consumption, peak usage, energy savings and carbon emission reduction." />
+  <title>Energy Analytics | SolarGrid MPPT</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("sg-theme");
+      if (!t) {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+  </script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <header id="nav"></header>
+
+  <main>
+    <section class="page-hero">
+      <canvas id="energyCanvas" data-particles aria-hidden="true"></canvas>
+      <div class="container">
+        <div class="eyebrow reveal visible"><span class="dot"></span> Energy Analytics</div>
+        <h1 class="reveal visible">Insights That <span class="grad-cyan-green">Drive Decisions</span></h1>
+        <p class="reveal reveal-d1 visible">Daily generation, monthly reports, battery cycles, peak usage and carbon savings — visualized from the cloud database.</p>
+        <div class="crumbs reveal reveal-d2 visible"><a href="index.html">Home</a> <span>&#8250;</span> <span style="color:var(--yellow)">Energy Analytics</span></div>
+      </div>
+    </section>
+
+    <!-- ============ SUMMARY STATS ============ -->
+    <section class="section" style="padding-top:20px">
+      <div class="container">
+        <div class="stat-band reveal">
+          <div class="stat">
+            <div class="num grad-text" data-count="268" data-suffix=" kWh"><span></span></div>
+            <div class="lbl">Generated This Month</div>
+          </div>
+          <div class="stat">
+            <div class="num" style="color:var(--cyan)" data-count="186" data-suffix=" kWh"><span></span></div>
+            <div class="lbl">Consumed This Month</div>
+          </div>
+          <div class="stat">
+            <div class="num" style="color:var(--green)" data-count="112" data-suffix=" kWh"><span></span></div>
+            <div class="lbl">Sent to Battery</div>
+          </div>
+          <div class="stat">
+            <div class="num" style="color:var(--yellow)" data-count="184" data-suffix=" kg"><span></span></div>
+            <div class="lbl">CO&#8322; Avoided</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DAILY + MONTHLY ============ -->
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="grid-2">
+          <div class="card chart-card reveal">
+            <div class="cc-head">
+              <h3>Daily Energy Generation</h3>
+              <span class="chip yellow">TODAY</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="dailyChart"></canvas>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;color:var(--slate-500);margin-top:12px">
+              <span>PEAK: <b style="color:var(--yellow)">1.52 kW</b> @ 13:00</span>
+              <span>TOTAL: <b style="color:var(--green)">8.4 kWh</b></span>
+            </div>
+          </div>
+          <div class="card chart-card reveal reveal-d1">
+            <div class="cc-head">
+              <h3>Monthly Energy Report</h3>
+              <span class="chip cyan">12 MONTHS</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="monthlyChart"></canvas>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;color:var(--slate-500);margin-top:12px">
+              <span>BEST MONTH: <b style="color:var(--cyan)">March</b></span>
+              <span>AVG: <b style="color:var(--green)">252 kWh</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BATTERY + LOAD ============ -->
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="grid-2">
+          <div class="card chart-card reveal">
+            <div class="cc-head">
+              <h3>Battery Charge / Discharge</h3>
+              <span class="chip green">7 DAYS</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="batteryCycleChart"></canvas>
+            </div>
+          </div>
+          <div class="card chart-card reveal reveal-d1">
+            <div class="cc-head">
+              <h3>Load Consumption Profile</h3>
+              <span class="chip yellow">HOURLY</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="loadProfileChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PEAK + SAVINGS ============ -->
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="grid-2">
+          <div class="card chart-card reveal">
+            <div class="cc-head">
+              <h3>Peak Usage Tracking</h3>
+              <span class="chip red">DEMAND</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="peakChart"></canvas>
+            </div>
+          </div>
+          <div class="card chart-card reveal reveal-d1">
+            <div class="cc-head">
+              <h3>Energy &amp; Carbon Savings</h3>
+              <span class="chip green">VS GRID</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="savingsChart"></canvas>
+            </div>
+            <div style="font-family:var(--font-mono);font-size:12px;color:var(--slate-400);margin-top:12px;display:flex;gap:20px;flex-wrap:wrap">
+              <span>&#10003; &euro; savings: <b style="color:var(--green)">+&#36;38 / mo</b></span>
+              <span>&#10003; grid offset: <b style="color:var(--cyan)">92%</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MONTHLY REPORT TABLE ============ -->
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="card reveal" style="padding:0">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:24px 26px 0;flex-wrap:wrap;gap:10px">
+            <h3 style="font-size:17px">Monthly Performance Report</h3>
+            <span class="chip green">FY 2026</span>
+          </div>
+          <div style="overflow-x:auto;padding:20px 26px 26px">
+            <table style="width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px">
+              <thead>
+                <tr style="text-align:left;font-family:var(--font-mono);font-size:11.5px;color:var(--slate-500);text-transform:uppercase;letter-spacing:.08em">
+                  <th style="padding:12px 14px;border-bottom:1px solid var(--border)">Month</th>
+                  <th style="padding:12px 14px;border-bottom:1px solid var(--border)">Generated</th>
+                  <th style="padding:12px 14px;border-bottom:1px solid var(--border)">Consumed</th>
+                  <th style="padding:12px 14px;border-bottom:1px solid var(--border)">Battery In</th>
+                  <th style="padding:12px 14px;border-bottom:1px solid var(--border)">CO&#8322; Saved</th>
+                  <th style="padding:12px 14px;border-bottom:1px solid var(--border)">Efficiency</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td style="padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.05);color:#fff">August</td><td>248 kWh</td><td>171 kWh</td><td>88 kWh</td><td>169 kg</td><td><span style="color:var(--green)">96.1%</span></td></tr>
+                <tr><td style="padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.05);color:#fff">September</td><td>261 kWh</td><td>179 kWh</td><td>96 kWh</td><td>178 kg</td><td><span style="color:var(--green)">96.8%</span></td></tr>
+                <tr><td style="padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.05);color:#fff">October</td><td>276 kWh</td><td>185 kWh</td><td>104 kWh</td><td>188 kg</td><td><span style="color:var(--green)">97.2%</span></td></tr>
+                <tr><td style="padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.05);color:#fff">November</td><td>289 kWh</td><td>191 kWh</td><td>112 kWh</td><td>197 kg</td><td><span style="color:var(--green)">97.5%</span></td></tr>
+                <tr><td style="padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.05);color:#fff">December</td><td>298 kWh</td><td>198 kWh</td><td>118 kWh</td><td>203 kg</td><td><span style="color:var(--green)">97.8%</span></td></tr>
+                <tr><td style="padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.05);color:#fff">January</td><td>272 kWh</td><td>186 kWh</td><td>102 kWh</td><td>185 kg</td><td><span style="color:var(--green)">97.0%</span></td></tr>
+                <tr><td style="padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.05);color:#fff">February</td><td>255 kWh</td><td>182 kWh</td><td>92 kWh</td><td>174 kg</td><td><span style="color:var(--green)">96.6%</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>See the Future of <span class="grad-text">Your Energy</span></h2>
+          <p>AI-powered forecasting predicts solar generation, load demand and battery state ahead of time.</p>
+          <a href="ai-forecasting.html" class="btn btn-primary btn-lg">Explore AI Forecasting <span>&#10148;</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/charts.js"></script>
+</body>
+</html>

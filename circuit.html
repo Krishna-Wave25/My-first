@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive circuit diagram of the solar microgrid — click each component to see its full specification and wiring details." />
+  <title>Interactive Circuit | SolarGrid MPPT</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("sg-theme");
+      if (!t) {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+  </script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <header id="nav"></header>
+
+  <main>
+    <section class="page-hero">
+      <canvas id="energyCanvas" data-particles aria-hidden="true"></canvas>
+      <div class="container">
+        <div class="eyebrow reveal visible"><span class="dot"></span> Interactive Circuit</div>
+        <h1 class="reveal visible">Wiring the <span class="grad-cyan-green">Microgrid Together</span></h1>
+        <p class="reveal reveal-d1 visible">A clickable schematic of the complete system — power path in yellow, sensor / IoT signal lines in cyan. Select any component to inspect its specification.</p>
+        <div class="crumbs reveal reveal-d2 visible"><a href="index.html">Home</a> <span>&#8250;</span> <span style="color:var(--yellow)">Interactive Circuit</span></div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:20px">
+      <div class="container">
+        <div class="circuit-wrap">
+          <div class="circuit-svg-wrap reveal">
+            <svg viewBox="0 0 1040 560" role="img" aria-label="Interactive microgrid circuit diagram">
+              <defs>
+                <linearGradient id="pwire" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stop-color="#ffc800"/><stop offset="1" stop-color="#00e676"/>
+                </linearGradient>
+              </defs>
+
+              <!-- ============ POWER BUS (top row) ============ -->
+              <path class="circ-wire" d="M210 110 H315 M410 110 H515 M610 110 H715 M810 110 H915"
+                    stroke="url(#pwire)" stroke-width="6" opacity=".9"/>
+              <path class="circ-wire signal" d="M210 110 H315 M410 110 H515 M610 110 H715 M810 110 H915"
+                    stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4 6" opacity=".5"/>
+
+              <!-- Solar Panel -->
+              <g class="circ-node" data-comp="panel" transform="translate(65,55)">
+                <rect class="body" x="0" y="0" width="145" height="110" rx="14" fill="#0b1437" stroke="#ffc800" stroke-width="2"/>
+                <rect x="12" y="14" width="121" height="52" rx="6" fill="#15244f" stroke="#2a3b78"/>
+                <g stroke="#ffc800" stroke-width="3" opacity=".85">
+                  <line x1="40" y1="24" x2="40" y2="40"/><line x1="40" y1="44" x2="40" y2="56"/>
+                  <line x1="34" y1="34" x2="46" y2="34"/><line x1="34" y1="46" x2="46" y2="46"/>
+                  <line x1="72" y1="24" x2="72" y2="40"/><line x1="72" y1="44" x2="72" y2="56"/>
+                  <line x1="66" y1="34" x2="78" y2="34"/><line x1="66" y1="46" x2="78" y2="46"/>
+                  <line x1="104" y1="24" x2="104" y2="40"/><line x1="104" y1="44" x2="104" y2="56"/>
+                  <line x1="98" y1="34" x2="110" y2="34"/><line x1="98" y1="46" x2="110" y2="46"/>
+                </g>
+                <circle cx="133" cy="48" r="5" fill="#ffc800"/>
+                <line x1="133" y1="53" x2="133" y2="72" stroke="#ffc800" stroke-width="2"/>
+                <line x1="127" y1="72" x2="139" y2="72" stroke="#ffc800" stroke-width="2"/>
+                <text x="72" y="88" text-anchor="middle" class="circ-label" font-size="14" fill="#fff">Solar Panel</text>
+                <text x="72" y="102" text-anchor="middle" class="circ-sub" fill="#8f9cc4" letter-spacing="1">PV 320W × 4</text>
+              </g>
+
+              <!-- MPPT -->
+              <g class="circ-node" data-comp="mppt" transform="translate(257,55)">
+                <rect class="body" x="0" y="0" width="150" height="110" rx="14" fill="#0b1437" stroke="#00e5ff" stroke-width="2"/>
+                <rect x="14" y="16" width="122" height="50" rx="8" fill="#10204a" stroke="#00e5ff" stroke-width="1.5"/>
+                <path d="M75 24l-14 24h11l-6 18 22-32h-12l6-10z" fill="#00e5ff"/>
+                <text x="60" y="78" text-anchor="middle" class="circ-label" font-size="12.5" fill="#fff">MPPT</text>
+                <text x="90" y="78" text-anchor="middle" class="circ-label" font-size="12.5" fill="#00e5ff">Controller</text>
+                <text x="75" y="98" text-anchor="middle" class="circ-sub" fill="#8f9cc4" letter-spacing="1">P&O · IncCond · AI</text>
+              </g>
+
+              <!-- Battery -->
+              <g class="circ-node" data-comp="battery" transform="translate(460,55)">
+                <rect class="body" x="0" y="0" width="150" height="110" rx="14" fill="#0b1437" stroke="#00e676" stroke-width="2"/>
+                <rect x="22" y="16" width="26" height="64" rx="6" fill="none" stroke="#00e676" stroke-width="3"/>
+                <rect x="48" y="16" width="26" height="64" rx="6" fill="none" stroke="#00e676" stroke-width="3"/>
+                <rect x="74" y="16" width="26" height="64" rx="6" fill="none" stroke="#00e676" stroke-width="3"/>
+                <g fill="#00e676" opacity=".8">
+                  <rect x="27" y="26" width="16" height="48" rx="3"/><rect x="53" y="26" width="16" height="48" rx="3"/><rect x="79" y="26" width="16" height="48" rx="3"/>
+                </g>
+                <line x1="119" y1="30" x2="119" y2="60" stroke="#00e676" stroke-width="3"/>
+                <line x1="126" y1="30" x2="126" y2="60" stroke="#00e676" stroke-width="3"/>
+                <text x="75" y="98" text-anchor="middle" class="circ-label" font-size="14" fill="#fff">Battery 48V</text>
+                <text x="75" y="80" text-anchor="middle" class="circ-sub" fill="#8f9cc4" letter-spacing="1">LiFePO₄ · 100Ah</text>
+              </g>
+
+              <!-- Inverter -->
+              <g class="circ-node" data-comp="inverter" transform="translate(662,55)">
+                <rect class="body" x="0" y="0" width="150" height="110" rx="14" fill="#0b1437" stroke="#ffab2e" stroke-width="2"/>
+                <rect x="14" y="16" width="122" height="50" rx="8" fill="#10204a" stroke="#ffab2e" stroke-width="1.5"/>
+                <path d="M32 41h14l8-12 8 24 8-18 8 6h22" fill="none" stroke="#ffab2e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <text x="75" y="78" text-anchor="middle" class="circ-label" font-size="14" fill="#fff">Inverter</text>
+                <text x="75" y="98" text-anchor="middle" class="circ-sub" fill="#8f9cc4" letter-spacing="1">1.5 kVA · 230V AC</text>
+              </g>
+
+              <!-- Load -->
+              <g class="circ-node" data-comp="load" transform="translate(865,55)">
+                <rect class="body" x="0" y="0" width="145" height="110" rx="14" fill="#0b1437" stroke="#e9eefc" stroke-width="2"/>
+                <path d="M72 16v14M72 34h30l-8-18-22 18z" fill="#e9eefc"/>
+                <path d="M40 34h64v8H40z" fill="#e9eefc"/>
+                <path d="M46 42v20M58 42v20M70 42v20M82 42v20M94 42v20" stroke="#e9eefc" stroke-width="2.5"/>
+                <text x="72" y="88" text-anchor="middle" class="circ-label" font-size="14" fill="#fff">AC / DC Load</text>
+                <text x="72" y="102" text-anchor="middle" class="circ-sub" fill="#8f9cc4" letter-spacing="1">Lights · Pump · Fan</text>
+              </g>
+
+              <!-- ============ SIGNAL BUS (bottom row) ============ -->
+              <g stroke="#00e5ff" stroke-width="1.6" stroke-dasharray="4 6" opacity=".6">
+                <path class="circ-wire signal" d="M137 165 V250 H510"/>
+                <path class="circ-wire signal" d="M400 165 V222 H510"/>
+                <path class="circ-wire signal" d="M535 165 V250 H510"/>
+                <path class="circ-wire signal" d="M737 165 V222 H510"/>
+                <path class="circ-wire signal" d="M937 165 V250 H510"/>
+              </g>
+              <path class="circ-wire signal" d="M510 250 V282" stroke="#00e5ff" stroke-width="2" stroke-dasharray="4 6"/>
+
+              <!-- Voltage & Current sensors -->
+              <g class="circ-node" data-comp="sensors" transform="translate(120,296)">
+                <rect class="body" x="0" y="0" width="168" height="78" rx="12" fill="#0b1437" stroke="#00e5ff" stroke-width="1.5"/>
+                <circle cx="26" cy="22" r="9" fill="none" stroke="#00e5ff" stroke-width="2"/><path d="M26 31v10M26 13V8" stroke="#00e5ff" stroke-width="2"/>
+                <text x="46" y="19" font-size="11" fill="#00e5ff" font-family="JetBrains Mono, monospace">V-Sensor</text>
+                <text x="46" y="33" font-size="11" fill="#00e5ff" font-family="JetBrains Mono, monospace">I-Sensor</text>
+                <text x="84" y="53" text-anchor="middle" class="circ-label" font-size="12.5" fill="#fff">Voltage &amp; Current</text>
+                <text x="84" y="68" text-anchor="middle" class="circ-sub" fill="#8f9cc4" letter-spacing="1">ACS712 · Divider</text>
+              </g>
+
+              <!-- ESP32 -->
+              <g class="circ-node" data-comp="esp32" transform="translate(440,296)">
+                <rect class="body" x="0" y="0" width="170" height="78" rx="12" fill="#0b1437" stroke="#00e676" stroke-width="2"/>
+                <rect x="10" y="12" width="40" height="40" rx="5" fill="#15244f" stroke="#00e676" stroke-width="1.5"/>
+                <rect x="18" y="18" width="24" height="24" rx="3" fill="none" stroke="#00e676"/>
+                <text x="86" y="26" text-anchor="middle" font-size="12" fill="#00e676" font-family="JetBrains Mono, monospace" font-weight="700">ESP32</text>
+                <text x="86" y="42" text-anchor="middle" font-size="11" fill="#8f9cc4" font-family="JetBrains Mono, monospace">MQTT · Wi-Fi</text>
+                <text x="86" y="62" text-anchor="middle" class="circ-sub" fill="#8f9cc4" letter-spacing="1">IoT BRAIN</text>
+              </g>
+
+              <!-- Temperature sensor -->
+              <g class="circ-node" data-comp="temp" transform="translate(730,296)">
+                <rect class="body" x="0" y="0" width="168" height="78" rx="12" fill="#0b1437" stroke="#ff4d6d" stroke-width="1.5"/>
+                <circle cx="26" cy="22" r="10" fill="none" stroke="#ff4d6d" stroke-width="2"/><path d="M26 12v6" stroke="#ff4d6d" stroke-width="2"/>
+                <text x="46" y="26" font-size="11" fill="#ff4d6d" font-family="JetBrains Mono, monospace">Temp</text>
+                <text x="84" y="53" text-anchor="middle" class="circ-label" font-size="12.5" fill="#fff">Temperature Sensor</text>
+                <text x="84" y="68" text-anchor="middle" class="circ-sub" fill="#8f9cc4" letter-spacing="1">DHT22 · NTC</text>
+              </g>
+
+              <!-- Relay -->
+              <g class="circ-node" data-comp="relay" transform="translate(872,296)">
+                <rect class="body" x="0" y="0" width="168" height="78" rx="12" fill="#0b1437" stroke="#ffab2e" stroke-width="1.5"/>
+                <rect x="14" y="12" width="34" height="34" rx="5" fill="#15244f" stroke="#ffab2e" stroke-width="1.5"/>
+                <line x1="31" y1="22" x2="31" y2="36" stroke="#ffab2e" stroke-width="2"/><line x1="24" y1="29" x2="38" y2="29" stroke="#ffab2e" stroke-width="2"/>
+                <text x="60" y="26" font-size="11" fill="#ffab2e" font-family="JetBrains Mono, monospace">Relay</text>
+                <text x="84" y="53" text-anchor="middle" class="circ-label" font-size="12.5" fill="#fff">Relay Module</text>
+                <text x="84" y="68" text-anchor="middle" class="circ-sub" fill="#8f9cc4" letter-spacing="1">4-ch · Load Switch</text>
+              </g>
+
+              <!-- Cloud -->
+              <g class="circ-node" data-comp="cloud" transform="translate(260,296)">
+                <rect class="body" x="0" y="0" width="168" height="78" rx="12" fill="#0b1437" stroke="#00e5ff" stroke-width="1.5"/>
+                <path d="M30 50a14 14 0 1 1 3-27 16 16 0 0 1 30-3 13 13 0 0 1-2 26z" fill="none" stroke="#00e5ff" stroke-width="2.5"/>
+                <text x="100" y="42" text-anchor="middle" class="circ-label" font-size="12.5" fill="#fff">Cloud</text>
+                <text x="100" y="58" text-anchor="middle" font-size="10" fill="#8f9cc4" font-family="JetBrains Mono, monospace">Database + MQTT</text>
+                <path d="M60 30l10 6M60 30l10-6M80 24c4 4 4 8 0 12" fill="none" stroke="#00e676" stroke-width="2"/>
+              </g>
+
+              <path class="circ-wire signal" d="M470 335 H610" stroke="#00e5ff" stroke-width="1.6" stroke-dasharray="4 6" opacity=".6"/>
+              <path class="circ-wire signal" d="M665 335 H730" stroke="#00e5ff" stroke-width="1.6" stroke-dasharray="4 6" opacity=".6"/>
+            </svg>
+            <div class="circ-hint">&#128072; Click any component to inspect its specification &amp; wiring</div>
+          </div>
+
+          <aside class="circ-info">
+            <div class="card reveal reveal-d1" id="compCard">
+              <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+                <div class="icn" id="compIcon" style="margin-bottom:0">&#9728;</div>
+                <div>
+                  <h3 id="compName" style="font-size:20px;margin-bottom:2px">Solar Panel</h3>
+                  <span class="mono" id="compRole" style="font-size:11.5px;color:var(--cyan);text-transform:uppercase;letter-spacing:.08em">Power Source</span>
+                </div>
+              </div>
+              <p id="compDesc" style="font-size:14px;color:var(--slate-400);line-height:1.7"></p>
+              <div class="comp-specs" id="compSpecs"></div>
+              <div style="margin-top:16px;padding:12px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--border);font-size:12.5px;color:var(--slate-400)">
+                <b style="color:var(--yellow);font-family:var(--font-mono)">WIRING NOTE</b><br />
+                <span id="compWiring"></span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:20px">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>See the Real <span class="grad-text">Components Up Close</span></h2>
+          <p>Browse the hardware gallery with illustrated specs for every part in the build.</p>
+          <a href="hardware.html" class="btn btn-primary btn-lg">Open Hardware Gallery <span>&#10148;</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/circuit.js"></script>
+</body>
+</html>

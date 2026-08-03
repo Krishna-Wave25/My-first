@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MPPT technology — maximum power point tracking algorithms: Perturb & Observe, Incremental Conductance, Fuzzy Logic and AI-Based MPPT." />
+  <title>MPPT Technology | SolarGrid MPPT</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("sg-theme");
+      if (!t) {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+  </script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <header id="nav"></header>
+
+  <main>
+    <section class="page-hero">
+      <canvas id="energyCanvas" data-particles aria-hidden="true"></canvas>
+      <div class="container">
+        <div class="eyebrow reveal visible"><span class="dot"></span> MPPT Technology</div>
+        <h1 class="reveal visible">Maximum Power Point <span class="grad-text">Tracking</span></h1>
+        <p class="reveal reveal-d1 visible">MPPT continuously adjusts the operating voltage and current of the solar panel so that maximum possible power is extracted under changing sunlight and temperature conditions.</p>
+        <div class="crumbs reveal reveal-d2 visible"><a href="index.html">Home</a> <span>&#8250;</span> <span style="color:var(--yellow)">MPPT Technology</span></div>
+      </div>
+    </section>
+
+    <!-- ============ MPPT INTRO + PV CURVE ============ -->
+    <section class="section" style="padding-top:20px">
+      <div class="container">
+        <div class="mppt-intro">
+          <div class="reveal">
+            <div class="eyebrow"><span class="dot"></span> The Core Technology</div>
+            <h2 style="font-size:clamp(28px,4vw,42px);margin:18px 0 16px">Finding the <span class="grad-text">Sweet Spot</span> of Every Panel</h2>
+            <p style="color:var(--slate-400);font-size:16px;margin-bottom:16px">A solar panel&rsquo;s power output depends on voltage, irradiance and temperature. The P-V curve has a single peak — the <b style="color:#fff">Maximum Power Point (MPP)</b>. MPPT algorithms hunt for that peak and hold the panel there, even as conditions shift.</p>
+            <p style="color:var(--slate-400);font-size:16px;margin-bottom:26px">The animation on the right shows an MPPT controller driving the operating point to the peak of the power curve, then oscillating tightly around it as it responds to changing irradiance.</p>
+            <div class="grid-2">
+              <div class="card">
+                <div class="icn"><span>&#11088;</span></div>
+                <h3>+98% Efficiency</h3>
+                <p>Modern MPPT converters track the MPP within 98% of the theoretical maximum.</p>
+              </div>
+              <div class="card">
+                <div class="icn cyan"><span>&#128200;</span></div>
+                <h3>Up to +30% Yield</h3>
+                <p>Compared with a fixed-voltage controller under partial shade and changing sun.</p>
+              </div>
+            </div>
+          </div>
+          <div class="pv-curve-wrap reveal reveal-d2">
+            <h4>P-V Curve &amp; MPP Tracking</h4>
+            <div class="sub">POWER (W) vs VOLTAGE (V) &middot; LIVE SIMULATION</div>
+            <div class="pv-box">
+              <canvas id="pvCurve"></canvas>
+              <div class="mpp-dot mpp-cross" id="mppDot"></div>
+            </div>
+            <div class="legend-row">
+              <span class="lg"><span class="sw" style="background:var(--yellow)"></span>Power curve</span>
+              <span class="lg"><span class="sw" style="background:var(--cyan)"></span>MPP tracking</span>
+              <span class="lg"><span class="sw" style="background:rgba(255,255,255,.2)"></span>Fixed voltage point</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ALGORITHMS ============ -->
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="eyebrow"><span class="dot"></span> MPPT Algorithms</div>
+          <h2>Four Strategies, <span class="grad-cyan-green">One Goal</span></h2>
+          <p>From proven classics to AI-driven prediction — each algorithm keeps the panel at its peak power point.</p>
+        </div>
+        <div class="alg-list">
+          <div class="card alg-card reveal">
+            <span class="rank">ALGO 01</span>
+            <div class="icn"><span>&#8645;</span></div>
+            <h3>Perturb &amp; Observe</h3>
+            <p>Perturbs the operating voltage in small steps and observes the resulting power change. If power rises, keep going; if it falls, reverse. Simple, robust and the industry standard.</p>
+            <div class="eff"><span>Tracking ~94%</span><div class="eff-track"><i style="width:94%"></i></div></div>
+          </div>
+          <div class="card alg-card reveal reveal-d1">
+            <span class="rank">ALGO 02</span>
+            <div class="icn cyan"><span>&#8721;</span></div>
+            <h3>Incremental Conductance</h3>
+            <p>Compares instantaneous conductance (I/V) with incremental conductance (dI/dV) to locate the exact MPP. More precise and stable in rapidly changing irradiance.</p>
+            <div class="eff"><span>Tracking ~97%</span><div class="eff-track"><i style="width:97%"></i></div></div>
+          </div>
+          <div class="card alg-card reveal reveal-d2">
+            <span class="rank">ALGO 03</span>
+            <div class="icn green"><span>&#9678;</span></div>
+            <h3>Fuzzy Logic MPPT</h3>
+            <p>Uses fuzzy rules on error and change-of-error to adapt the operating point. Handles non-linearities and partial shading conditions with smooth, fast convergence.</p>
+            <div class="eff"><span>Tracking ~97.5%</span><div class="eff-track"><i style="width:97.5%"></i></div></div>
+          </div>
+          <div class="card alg-card reveal reveal-d3">
+            <span class="rank">ALGO 04</span>
+            <div class="icn" style="background:linear-gradient(145deg,rgba(255,200,0,.2),rgba(0,229,255,.12));border-color:rgba(255,200,0,.35);color:var(--yellow)"><span>&#9889;</span></div>
+            <h3>AI-Based MPPT</h3>
+            <p>Machine-learning models learn the panel&rsquo;s behaviour over time and predict the optimum point ahead of irradiance changes. Best dynamic response and highest yield.</p>
+            <div class="eff"><span>Tracking ~98.5%</span><div class="eff-track"><i style="width:98.5%"></i></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow"><span class="dot"></span> How It Works</div>
+          <h2>The MPPT <span class="grad-text">Control Loop</span></h2>
+        </div>
+        <div class="flow-wrap reveal">
+          <div class="flow">
+            <div class="flow-node">
+              <div class="ficn" style="background:rgba(255,200,0,.14);color:var(--yellow)">&#128266;</div>
+              <b>Measure</b><span>Sample V &amp; I</span>
+            </div>
+            <div class="flow-arrow">&#10148;</div>
+            <div class="flow-node">
+              <div class="ficn" style="background:rgba(0,229,255,.14);color:var(--cyan)">&#128202;</div>
+              <b>Compute P</b><span>Power = V &times; I</span>
+            </div>
+            <div class="flow-arrow">&#10148;</div>
+            <div class="flow-node">
+              <div class="ficn" style="background:rgba(0,230,118,.14);color:var(--green)">&#129520;</div>
+              <b>Compare</b><span>Is power rising?</span>
+            </div>
+            <div class="flow-arrow">&#10148;</div>
+            <div class="flow-node">
+              <div class="ficn" style="background:rgba(255,171,46,.14);color:var(--orange)">&#9881;</div>
+              <b>Adjust</b><span>Shift duty cycle</span>
+            </div>
+            <div class="flow-arrow">&#10148;</div>
+            <div class="flow-node">
+              <div class="ficn" style="background:rgba(255,200,0,.14);color:var(--yellow)">&#11088;</div>
+              <b>Converge</b><span>Hold at MPP</span>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-3 reveal">
+          <a href="dashboard.html" class="btn btn-primary">See MPPT in the Live Dashboard <span>&#10148;</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/mppt.js"></script>
+</body>
+</html>

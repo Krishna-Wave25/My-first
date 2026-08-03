@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Project documentation — the full IEEE-style brochure for the IoT-Based Solar Microgrid Energy Management System with MPPT: abstract, architecture, algorithms, results and future scope." />
+  <title>Documentation | SolarGrid MPPT</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("sg-theme");
+      if (!t) {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+  </script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <header id="nav"></header>
+
+  <main>
+    <section class="page-hero">
+      <canvas id="energyCanvas" data-particles aria-hidden="true"></canvas>
+      <div class="container">
+        <div class="eyebrow reveal visible"><span class="dot"></span> Documentation</div>
+        <h1 class="reveal visible">Project <span class="grad-cyan-green">Documentation</span></h1>
+        <p class="reveal reveal-d1 visible">The complete IEEE-style brochure, rendered as a web page. Download the print-ready PDF below.</p>
+        <div class="crumbs reveal reveal-d2 visible"><a href="index.html">Home</a> <span>&#8250;</span> <span style="color:var(--yellow)">Documentation</span></div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:20px">
+      <div class="container">
+        <div class="dl-row" style="justify-content:center;margin-bottom:28px">
+          <a href="assets/SolarGrid_MPPT_Brochure.pdf" class="btn btn-primary btn-lg" download><span class="file-ic">&#128196;</span> Download PDF Brochure</a>
+          <a href="team.html" class="btn btn-ghost btn-lg">About the Team</a>
+        </div>
+
+        <div class="brochure-doc reveal">
+          <div class="b-cover">
+            <div class="b-kicker">IEEE-STYLE PROJECT BROCHURE &mdash; VOL. 1</div>
+            <h1>IoT-Based Solar Microgrid Energy Management System with MPPT</h1>
+            <h2>Maximum Power Point Tracking &middot; IoT Telemetry &middot; Cloud Analytics &middot; AI Forecasting</h2>
+            <div class="b-line"></div>
+            <div class="b-org">Department of Electrical &amp; Electronics Engineering &middot; Final Year Project &middot; 2025 &ndash; 2026</div>
+          </div>
+
+          <div class="b-page">
+            <div class="b-meta">Document: SolarGrid_MPPT_Brochure &middot; Version 1.0 &middot; Pages 5</div>
+            <h3>Abstract</h3>
+            <p class="b-abstract">
+              This project presents an IoT-Based Solar Microgrid Energy Management System with Maximum
+              Power Point Tracking (MPPT) designed to maximize solar power extraction and improve energy
+              management. The system integrates a photovoltaic array, an MPPT charge controller, lithium
+              battery storage and an IoT monitoring layer built around an ESP32 controller. Real-time
+              measurements of voltage, current, power, battery state-of-charge, temperature and load
+              consumption are streamed over MQTT to a cloud database and rendered on a live web dashboard.
+              The platform delivers MPPT optimization, fault detection, remote load control, energy
+              analytics and AI-based generation and load forecasting, improving efficiency, reliability
+              and sustainability compared with conventional fixed-voltage solar systems.
+            </p>
+            <p class="b-kw"><b>Index Terms &mdash;</b> IoT, Maximum Power Point Tracking (MPPT), Solar Microgrid, ESP32, MQTT, Battery Energy Storage, Cloud Analytics, AI Forecasting.</p>
+
+            <h3>I. Introduction</h3>
+            <p>
+              Traditional solar energy systems frequently lose efficiency because the output of a solar
+              panel changes continuously with sunlight, temperature, battery condition and load demand.
+              Without intelligent monitoring and control, energy is wasted, battery life is reduced and
+              faults may go undetected for long periods. This project replaces the passive approach with
+              an active, connected microgrid: MPPT algorithms extract the maximum possible power from the
+              array, while IoT sensors give operators complete real-time visibility and remote control
+              over the entire energy flow &mdash; from panel to load.
+            </p>
+
+            <h3>II. Problem Statement</h3>
+            <p>
+              Conventional solar installations operate at a fixed voltage point that rarely matches the
+              panel's true Maximum Power Point, particularly under partial shading or changing irradiance.
+              Operators lack real-time insight into generation, storage, consumption and thermal state,
+              delaying fault response and preventing optimal scheduling. The objective of this project is
+              to solve these problems by combining MPPT control, IoT sensing, cloud storage and a web
+              dashboard into a single intelligent energy management system.
+            </p>
+
+            <h3>III. System Architecture</h3>
+            <p>
+              The system is organized into two complementary layers: a <b>power layer</b> that converts and
+              stores solar energy, and an <b>IoT telemetry layer</b> that senses, transmits and visualizes data.
+            </p>
+            <p><b>Power path:</b> Solar Panel (320W &times; 4) &rarr; MPPT Controller (P&amp;O / IncCond / AI) &rarr; Battery Bank (48V LiFePO&#8324;) &rarr; Inverter (1.5 kVA) &rarr; AC / DC Loads.</p>
+            <p><b>Telemetry path:</b> IoT Sensors (V / I / Temp) &rarr; ESP32 (MQTT &middot; Wi-Fi) &rarr; Cloud Database (Time-series) &rarr; Web Dashboard (Live analytics), with control commands returned over the same channel.</p>
+
+            <h3>IV. MPPT Technology</h3>
+            <p>
+              Maximum Power Point Tracking continuously adjusts the operating voltage and current of the
+              array so the maximum possible power is extracted under changing sunlight and temperature.
+              The controller compares power before and after each perturbation and converges on the peak
+              of the P-V curve, where dP/dV = 0. The implemented algorithms are:
+            </p>
+            <ul>
+              <li>Perturb &amp; Observe &mdash; classic hill-climbing; simple and robust, ideal for stable irradiance.</li>
+              <li>Incremental Conductance &mdash; compares I/V with dI/dV for precise tracking under rapid changes.</li>
+              <li>Fuzzy Logic MPPT &mdash; rule-based controller that handles non-linear and partial-shading cases.</li>
+              <li>AI-Based MPPT &mdash; machine-learning model predicts the optimum point ahead of irradiance shifts.</li>
+            </ul>
+
+            <h3>V. Dashboard &amp; System Features</h3>
+            <ul>
+              <li>Real-time monitoring of solar voltage, current, power, battery percentage, load, temperature.</li>
+              <li>Animated energy-flow visualization between panel &rarr; MPPT &rarr; battery &rarr; inverter &rarr; load.</li>
+              <li>Live sensor telemetry charts for voltage, current, power, battery SOC, temperature and efficiency.</li>
+              <li>Fault detection with severity classification, alert feed and full incident history.</li>
+              <li>Remote load control via a 4-channel relay module with smart scheduling.</li>
+              <li>AI weather-based prediction of solar generation and load demand for the next 48 hours.</li>
+              <li>CO&#8322;-savings and energy-savings reporting with exportable monthly summaries.</li>
+            </ul>
+
+            <h3>VI. Results &amp; Performance</h3>
+            <p>The system was validated over a two-week period spanning sunny, partly cloudy and shaded conditions. Representative measurements are summarized below.</p>
+            <table>
+              <tr><th>Metric</th><th>Value</th><th>Metric</th><th>Value</th></tr>
+              <tr><td>Peak generation</td><td>1.52 kW</td><td>Daily energy</td><td>8.4 kWh</td></tr>
+              <tr><td>MPPT tracking</td><td>98.2%</td><td>Battery capacity</td><td>4.8 kWh</td></tr>
+              <tr><td>System efficiency</td><td>96.4%</td><td>Load coverage</td><td>92%</td></tr>
+              <tr><td>Fault response</td><td>&lt; 3 s</td><td>CO&#8322; saved / day</td><td>4.2 kg</td></tr>
+            </table>
+
+            <h3>VII. Applications &amp; Benefits</h3>
+            <p>
+              <b>Applications:</b> rural electrification, smart homes, agriculture and irrigation, telecom towers,
+              small industries, emergency backup, EV charging stations and smart city infrastructure.
+            </p>
+            <p>
+              <b>Benefits:</b> maximum solar extraction, reduced wastage, better battery management, real-time
+              control, lower electricity cost, improved reliability and measurable carbon reduction.
+            </p>
+
+            <h3>VIII. Future Scope</h3>
+            <ul>
+              <li>AI-based energy optimization and reinforcement-learning controllers.</li>
+              <li>Native mobile app with push notifications and voice-assistant support.</li>
+              <li>EV charging integration with vehicle-to-grid (V2G) capability.</li>
+              <li>Blockchain-based peer-to-peer energy trading between microgrid neighbours.</li>
+              <li>Grid-connected operation with net metering and demand-response services.</li>
+              <li>Advanced fault prediction using vibration, thermal and electrical signatures.</li>
+              <li>Large-scale smart city deployment with centralized energy intelligence.</li>
+            </ul>
+
+            <h3>IX. Conclusion</h3>
+            <p>
+              The IoT-Based Solar Microgrid Energy Management System with MPPT demonstrates how the
+              combination of power electronics, IoT, cloud computing and machine learning can transform a
+              conventional solar installation into an intelligent, self-optimizing energy platform. With
+              98%+ MPPT tracking efficiency, real-time telemetry, automated fault response and AI-based
+              forecasting, the system delivers measurable gains in energy yield, reliability and
+              sustainability &mdash; providing a scalable blueprint for smart microgrids of the future.
+            </p>
+
+            <h3>X. References</h3>
+            <ul>
+              <li>[1] B. Subudhi and R. Pradhan, "A comparative study on maximum power point tracking techniques for photovoltaic power systems," IEEE Trans. Sustain. Energy, vol. 4, no. 1, pp. 89&ndash;98, Jan. 2013.</li>
+              <li>[2] N. Femia, G. Petrone, G. Spagnuolo, and M. Vitelli, "Optimization of perturb and observe maximum power point tracking method," IEEE Trans. Power Electron., vol. 20, no. 4, pp. 963&ndash;973, Jul. 2005.</li>
+              <li>[3] M. A. Elgendy, B. Zahawi, and D. J. Atkinson, "Assessment of the incremental conductance maximum power point tracking algorithm," IEEE Trans. Sustain. Energy, vol. 4, no. 1, pp. 108&ndash;117, Jan. 2013.</li>
+              <li>[4] T. Esram and P. L. Chapman, "Comparison of photovoltaic array maximum power point tracking techniques," IEEE Trans. Energy Convers., vol. 22, no. 2, pp. 439&ndash;449, Jun. 2007.</li>
+              <li>[5] Y. Saleem, N. Crespi, M. H. Rehmani, and R. Copeland, "Internet of Things-aided smart grid: technologies, architectures, applications, prototypes, and future research directions," IEEE Access, vol. 7, pp. 62962&ndash;63003, 2019.</li>
+            </ul>
+
+            <div class="b-foot">Prepared as part of the final-year project showcase. Figures are representative of the deployed prototype.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:20px">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>Want the <span class="grad-text">Print-Ready Version?</span></h2>
+          <p>Grab the PDF for offline reading, printing or your submission appendix.</p>
+          <div class="dl-row" style="justify-content:center">
+            <a href="assets/SolarGrid_MPPT_Brochure.pdf" class="btn btn-primary btn-lg" download><span class="file-ic">&#128196;</span> Download PDF Brochure</a>
+            <a href="index.html" class="btn btn-ghost btn-lg">Back to Home</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="SolarGrid MPPT logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16254F"/>
+      <stop offset="1" stop-color="#05091C"/>
+    </linearGradient>
+    <linearGradient id="bolt" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5df5a3"/>
+      <stop offset="1" stop-color="#00e676"/>
+    </linearGradient>
+    <linearGradient id="sun" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd94d"/>
+      <stop offset="1" stop-color="#ffab2e"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Badge -->
+  <rect x="12" y="12" width="488" height="488" rx="112" fill="url(#bg)" stroke="#23357D" stroke-width="6"/>
+
+  <!-- Circuit trace (hexagon ring) -->
+  <path d="M256 96 L400 176 L400 336 L256 416 L112 336 L112 176 Z"
+        fill="none" stroke="#00E5FF" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>
+  <circle cx="400" cy="176" r="12" fill="#00E5FF"/>
+  <circle cx="400" cy="336" r="12" fill="#00E5FF"/>
+  <circle cx="256" cy="416" r="12" fill="#00E5FF"/>
+
+  <!-- Sun -->
+  <g filter="url(#glow)">
+    <circle cx="256" cy="212" r="64" fill="url(#sun)"/>
+  </g>
+  <g stroke="#FFC800" stroke-width="14" stroke-linecap="round">
+    <line x1="256" y1="108" x2="256" y2="132"/>
+    <line x1="256" y1="292" x2="256" y2="316"/>
+    <line x1="152" y1="212" x2="176" y2="212"/>
+    <line x1="336" y1="212" x2="360" y2="212"/>
+    <line x1="182" y1="138" x2="199" y2="155"/>
+    <line x1="313" y1="269" x2="330" y2="286"/>
+    <line x1="330" y1="138" x2="313" y2="155"/>
+    <line x1="199" y1="269" x2="182" y2="286"/>
+  </g>
+
+  <!-- Lightning bolt -->
+  <path d="M258 300 L226 380 L250 380 L240 452 L296 366 L270 366 L292 300 Z"
+        fill="url(#bolt)" stroke="#0B1437" stroke-width="6" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,206 @@
+/* ============================================================
+   Theme system — Dark (default) / Light, auto system detection
+   Theme is applied via <html data-theme="dark|light"> set by
+   js/theme.js BEFORE first paint to avoid flash.
+   ============================================================ */
+
+html[data-theme="light"] {
+  --navy-950: #0d1736;
+  --navy-900: #131f45;
+  --navy-850: #18264f;
+  --navy-800: #1d2c5c;
+  --navy-700: #2a3b78;
+  --navy-600: #3b4e92;
+
+  --yellow: #e6a800;
+  --yellow-soft: #b8860b;
+  --green: #00a65c;
+  --green-soft: #0e9e6e;
+  --cyan: #0099c9;
+  --cyan-soft: #007da8;
+
+  --white: #0a1128;
+  --slate-100: #16214a;
+  --slate-300: #3a4a74;
+  --slate-400: #4b5a86;
+  --slate-500: #7a87ad;
+  --red: #d9254a;
+  --orange: #d97706;
+
+  --bg: #eef1f9;
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-strong: rgba(255, 255, 255, 0.92);
+  --surface-hover: rgba(255, 255, 255, 1);
+  --border: rgba(20, 32, 66, 0.12);
+  --border-strong: rgba(20, 32, 66, 0.24);
+
+  --shadow: 0 20px 60px rgba(21, 32, 66, 0.16);
+  --glow-yellow: 0 0 22px rgba(230, 168, 0, 0.25);
+  --glow-green: 0 0 22px rgba(0, 166, 92, 0.25);
+  --glow-cyan: 0 0 22px rgba(0, 153, 201, 0.25);
+
+  color-scheme: light;
+}
+html[data-theme="dark"] { color-scheme: dark; }
+
+/* ---------- Ambient background (light) ---------- */
+html[data-theme="light"] .ambient {
+  background:
+    radial-gradient(1000px 600px at 80% -10%, rgba(0, 153, 201, 0.10), transparent 60%),
+    radial-gradient(900px 700px at 0% 30%, rgba(0, 166, 92, 0.08), transparent 55%),
+    radial-gradient(1100px 700px at 60% 110%, rgba(230, 168, 0, 0.10), transparent 60%),
+    var(--bg);
+}
+html[data-theme="light"] .ambient::before {
+  background-image:
+    linear-gradient(rgba(20, 32, 66, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 32, 66, 0.05) 1px, transparent 1px);
+}
+html[data-theme="light"] .orb-1 { background: rgba(230, 168, 0, 0.16); }
+html[data-theme="light"] .orb-2 { background: rgba(0, 153, 201, 0.14); }
+html[data-theme="light"] .orb-3 { background: rgba(0, 166, 92, 0.13); }
+
+/* ---------- Navbar (light) ---------- */
+html[data-theme="light"] .nav.scrolled {
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 10px 40px rgba(21, 32, 66, 0.10);
+}
+html[data-theme="light"] .nav-links a:hover { background: rgba(20, 32, 66, 0.06); }
+html[data-theme="light"] .btn-ghost {
+  background: rgba(20, 32, 66, 0.05);
+  color: var(--navy-900);
+}
+html[data-theme="light"] .mobile-menu {
+  background: rgba(238, 241, 249, 0.98);
+}
+
+/* ---------- Glass surfaces (light) ---------- */
+html[data-theme="light"] .hero-panel,
+html[data-theme="light"] .arch-canvas,
+html[data-theme="light"] .pv-curve-wrap {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
+}
+html[data-theme="light"] .float-card { background: rgba(255, 255, 255, 0.92); }
+html[data-theme="light"] .mini-card,
+html[data-theme="light"] .battery,
+html[data-theme="light"] .estep,
+html[data-theme="light"] .alert-item,
+html[data-theme="light"] .load-btn,
+html[data-theme="light"] .form-group input,
+html[data-theme="light"] .form-group textarea,
+html[data-theme="light"] .form-group select,
+html[data-theme="light"] .arch-node,
+html[data-theme="light"] .flow-node,
+html[data-theme="light"] .comp-card,
+html[data-theme="light"] .app-card,
+html[data-theme="light"] .ci-row,
+html[data-theme="light"] .hstat,
+html[data-theme="light"] .energy-strip,
+html[data-theme="light"] .k-tag,
+html[data-theme="light"] .chip {
+  background: rgba(255, 255, 255, 0.85);
+}
+html[data-theme="light"] .kpi {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.7));
+}
+html[data-theme="light"] .card { background: var(--surface); }
+
+html[data-theme="light"] .stat-band {
+  background: linear-gradient(120deg, rgba(0, 153, 201, 0.07), rgba(0, 166, 92, 0.07), rgba(230, 168, 0, 0.08));
+}
+html[data-theme="light"] .cta-band {
+  background: linear-gradient(120deg, rgba(0, 153, 201, 0.08), rgba(0, 166, 92, 0.08), rgba(230, 168, 0, 0.1));
+  border-color: var(--border-strong);
+}
+html[data-theme="light"] .footer { background: rgba(255, 255, 255, 0.75); }
+html[data-theme="light"] .split-col.problem { background: linear-gradient(160deg, rgba(217, 37, 74, 0.07), rgba(217, 37, 74, 0.02)); }
+html[data-theme="light"] .split-col.solution { background: linear-gradient(160deg, rgba(0, 166, 92, 0.08), rgba(0, 153, 201, 0.04)); }
+
+/* ---------- Hardcoded dark-only surfaces ---------- */
+html[data-theme="light"] .solar-panel {
+  background: linear-gradient(160deg, #dbe3f7, #c6d2ef);
+  border-color: rgba(20, 32, 66, 0.3);
+}
+html[data-theme="light"] .solar-cell { background: linear-gradient(150deg, #dfe7fa, #ccd8f2); border-color: rgba(20, 32, 66, 0.12); }
+html[data-theme="light"] .solar-panel::after {
+  background: radial-gradient(circle at 50% 50%, rgba(230, 168, 0, 0.2), transparent 60%);
+}
+html[data-theme="light"] .kpi .k-bar, html[data-theme="light"] .bat-track, html[data-theme="light"] .eff-track {
+  background: rgba(20, 32, 66, 0.1);
+}
+html[data-theme="light"] .load-btn .sw { background: rgba(20, 32, 66, 0.2); }
+html[data-theme="light"] .panel-ticker { border-top-color: var(--border-strong); }
+html[data-theme="light"] .tl-item .tl-dot { background: #eef1f9; }
+
+/* ---------- Form focus (light) ---------- */
+html[data-theme="light"] .form-group input:focus, html[data-theme="light"] .form-group textarea:focus, html[data-theme="light"] .form-group select:focus {
+  background: rgba(0, 153, 201, 0.06);
+}
+
+/* ---------- Scrollbar (light) ---------- */
+html[data-theme="light"] ::-webkit-scrollbar-track { background: #e6eaf5; }
+html[data-theme="light"] ::-webkit-scrollbar-thumb { background: linear-gradient(#b9c4e4, #a3b1da); }
+html[data-theme="light"] ::selection { background: rgba(230, 168, 0, 0.28); }
+
+/* ---------- Charts adapt via JS, but keep base legend readable ---------- */
+html[data-theme="light"] #energyCanvas { opacity: 0.7; }
+
+/* ============================================================
+   Theme toggle button
+   ============================================================ */
+.theme-toggle {
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border-radius: 12px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--yellow);
+  transition: transform .3s, border-color .3s, box-shadow .3s, background .3s;
+}
+.theme-toggle:hover { transform: rotate(12deg) scale(1.08); border-color: rgba(0, 229, 255, 0.6); box-shadow: var(--glow-cyan); }
+.theme-toggle svg { width: 19px; height: 19px; }
+html[data-theme="light"] .theme-toggle { color: var(--orange); }
+/* swap icon based on theme */
+.theme-toggle .icon-moon { display: none; }
+html[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+html[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+html[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+
+/* ============================================================
+   Loading screen
+   ============================================================ */
+#loader {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
+  background: var(--navy-950);
+  transition: opacity .7s ease, visibility .7s;
+}
+html[data-theme="light"] #loader { background: #eef1f9; }
+#loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-logo {
+  width: 84px; height: 84px;
+  animation: loaderPulse 1.6s ease-in-out infinite;
+  filter: drop-shadow(0 0 24px rgba(255, 200, 0, 0.35));
+}
+@keyframes loaderPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+.loader-ring {
+  width: 120px; height: 120px;
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--yellow);
+  border-right-color: var(--cyan);
+  animation: spinSlow 1s linear infinite;
+}
+.loader-title { font-family: var(--font-head); font-size: 18px; color: #fff; letter-spacing: .04em; }
+html[data-theme="light"] .loader-title { color: var(--navy-900); }
+.loader-sub { font-family: var(--font-mono); font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: var(--green-soft); }
+html[data-theme="light"] .loader-sub { color: var(--green); }
+.loader-bar { width: 220px; height: 4px; border-radius: 4px; background: var(--surface-strong); overflow: hidden; }
+.loader-bar i { display: block; height: 100%; width: 0; border-radius: 4px; background: var(--grad-cta); animation: loadFill 1.8s cubic-bezier(.2,.8,.3,1) forwards; }
+@keyframes loadFill { to { width: 100%; } }
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}

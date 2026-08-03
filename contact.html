@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact the SolarGrid MPPT team — request a demo, ask about deployments, partnerships or project details." />
+  <title>Contact | SolarGrid MPPT</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("sg-theme");
+      if (!t) {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+  </script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <header id="nav"></header>
+
+  <main>
+    <section class="page-hero">
+      <canvas id="energyCanvas" data-particles aria-hidden="true"></canvas>
+      <div class="container">
+        <div class="eyebrow reveal visible"><span class="dot"></span> Contact</div>
+        <h1 class="reveal visible">Let's Power Your <span class="grad-text">Next Project</span></h1>
+        <p class="reveal reveal-d1 visible">Request a live demo, ask about a deployment, or discuss a partnership for your microgrid initiative.</p>
+        <div class="crumbs reveal reveal-d2 visible"><a href="index.html">Home</a> <span>&#8250;</span> <span style="color:var(--yellow)">Contact</span></div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:20px">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="contact-info reveal">
+            <div class="ci-row">
+              <div class="ci-ic" style="background:rgba(255,200,0,.12);color:var(--yellow)">&#9993;</div>
+              <div><b>Email Us</b><span>solar.microgrid.mppt@gmail.com</span></div>
+            </div>
+            <div class="ci-row">
+              <div class="ci-ic" style="background:rgba(0,229,255,.12);color:var(--cyan)">&#9742;</div>
+              <div><b>Call / WhatsApp</b><span>+91 98765 43210</span></div>
+            </div>
+            <div class="ci-row">
+              <div class="ci-ic" style="background:rgba(0,230,118,.12);color:var(--green)">&#128205;</div>
+              <div><b>Project Location</b><span>Deployable worldwide &middot; Designed in India</span></div>
+            </div>
+            <div class="ci-row">
+              <div class="ci-ic" style="background:rgba(255,171,46,.12);color:var(--orange)">&#9203;</div>
+              <div><b>Response Time</b><span>Usually within 24 hours</span></div>
+            </div>
+
+            <div class="card" style="margin-top:6px">
+              <h3 style="font-size:17px;margin-bottom:12px">Project Snapshot</h3>
+              <div class="dash-stack" style="gap:10px">
+                <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:13px"><span style="color:var(--slate-400)">System</span><b style="color:#fff">IoT Solar Microgrid + MPPT</b></div>
+                <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:13px"><span style="color:var(--slate-400)">Capacity</span><b style="color:#fff">1.28 kWp &middot; 48V LiFePO&#8324;</b></div>
+                <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:13px"><span style="color:var(--slate-400)">Controller</span><b style="color:#fff">ESP32 &middot; MQTT &middot; Cloud</b></div>
+                <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:13px"><span style="color:var(--slate-400)">Status</span><b style="color:var(--green)">&#9679; Deployed &amp; Monitoring</b></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card form-card reveal reveal-d1">
+            <h3>Send us a message</h3>
+            <p>Fill in the form and the team will get back to you within one business day.</p>
+            <form id="contactForm" novalidate>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="name">Full Name</label>
+                  <input id="name" type="text" placeholder="Jane Smith" required />
+                </div>
+                <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <input id="email" type="email" placeholder="jane@company.com" required />
+                </div>
+                <div class="form-group">
+                  <label for="org">Organization</label>
+                  <input id="org" type="text" placeholder="Your company / institute" />
+                </div>
+                <div class="form-group">
+                  <label for="interest">I'm interested in</label>
+                  <select id="interest">
+                    <option>Live demo / walkthrough</option>
+                    <option>Deployment for my site</option>
+                    <option>Research / academic project</option>
+                    <option>Partnership</option>
+                    <option>Something else</option>
+                  </select>
+                </div>
+                <div class="form-group full">
+                  <label for="message">Message</label>
+                  <textarea id="message" rows="5" placeholder="Tell us about your energy needs, location, capacity requirements..."></textarea>
+                </div>
+                <div class="form-note"><span>&#128274;</span> Your details are encrypted and never shared with third parties.</div>
+                <div class="form-group full">
+                  <button type="submit" class="btn btn-primary" style="width:100%">Send Message <span>&#10148;</span></button>
+                </div>
+              </div>
+            </form>
+            <div class="form-success" id="formSuccess">
+              <span style="font-size:18px">&#10003;</span>
+              <div><b style="color:#fff">Message sent successfully!</b><br />Thank you for reaching out — we'll reply within 24 hours.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      const form = document.getElementById("contactForm");
+      const success = document.getElementById("formSuccess");
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const name = form.name.value.trim();
+        const email = form.email.value.trim();
+        if (!name) { form.name.focus(); form.name.style.borderColor = "var(--red)"; return; }
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { form.email.focus(); form.email.style.borderColor = "var(--red)"; return; }
+        success.style.display = "flex";
+        form.reset();
+        success.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    })();
+  </script>
+</body>
+</html>

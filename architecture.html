@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="System architecture of the IoT-Based Solar Microgrid — solar panel, MPPT charge controller, battery storage, inverter, loads, IoT controller, cloud database and web dashboard." />
+  <title>System Architecture | SolarGrid MPPT</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("sg-theme");
+      if (!t) {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+  </script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <header id="nav"></header>
+
+  <main>
+    <section class="page-hero">
+      <canvas id="energyCanvas" data-particles aria-hidden="true"></canvas>
+      <div class="container">
+        <div class="eyebrow reveal visible"><span class="dot"></span> System Architecture</div>
+        <h1 class="reveal visible">How the <span class="grad-cyan-green">Microgrid</span> Is Built</h1>
+        <p class="reveal reveal-d1 visible">A complete power path from solar panel to load, plus an intelligent IoT telemetry layer that connects every stage to the cloud.</p>
+        <div class="crumbs reveal reveal-d2 visible"><a href="index.html">Home</a> <span>&#8250;</span> <span style="color:var(--yellow)">System Architecture</span></div>
+      </div>
+    </section>
+
+    <!-- ============ ARCHITECTURE DIAGRAM ============ -->
+    <section class="section" style="padding-top:20px">
+      <div class="container">
+        <div class="arch-canvas reveal">
+          <h3>&#9881; POWER FLOW &mdash; ENERGY PATH</h3>
+          <div class="arch-row">
+            <div class="arch-node">
+              <div class="ai" style="background:rgba(255,200,0,.14);color:var(--yellow)">&#9728;</div>
+              <b>Solar Panel</b><span>PV array &middot; 320W x4</span>
+            </div>
+            <div class="arch-node">
+              <div class="ai" style="background:rgba(0,229,255,.14);color:var(--cyan)">&#9889;</div>
+              <b>MPPT Charge Controller</b><span>Max power tracking</span>
+            </div>
+            <div class="arch-node">
+              <div class="ai" style="background:rgba(0,230,118,.14);color:var(--green)">&#128267;</div>
+              <b>Battery Storage</b><span>LiFePO&#8324; 48V</span>
+            </div>
+            <div class="arch-node">
+              <div class="ai" style="background:rgba(255,171,46,.14);color:var(--orange)">&#10226;</div>
+              <b>Inverter</b><span>1.5kVA &middot; 230V AC</span>
+            </div>
+            <div class="arch-node">
+              <div class="ai" style="background:rgba(255,255,255,.12);color:#fff">&#127776;</div>
+              <b>AC / DC Loads</b><span>Home &amp; appliance</span>
+            </div>
+          </div>
+
+          <div class="arch-divider">IoT Telemetry Layer</div>
+
+          <div class="arch-row iot">
+            <div class="arch-node">
+              <div class="ai" style="background:rgba(255,200,0,.14);color:var(--yellow)">&#128273;</div>
+              <b>Voltage &amp; Current Sensors</b><span>ACS712 / Voltage Divider</span>
+            </div>
+            <div class="arch-node">
+              <div class="ai" style="background:rgba(0,229,255,.14);color:var(--cyan)">&#128266;</div>
+              <b>Temperature Sensor</b><span>DHT22 / NTC</span>
+            </div>
+            <div class="arch-node">
+              <div class="ai" style="background:rgba(0,230,118,.14);color:var(--green)">&#128241;</div>
+              <b>IoT Controller</b><span>ESP32 &middot; Arduino &middot; Pi</span>
+            </div>
+            <div class="arch-node">
+              <div class="ai" style="background:rgba(255,171,46,.14);color:var(--orange)">&#127960;</div>
+              <b>Relay Module</b><span>Remote load switching</span>
+            </div>
+          </div>
+
+          <div class="arch-divider">Cloud &amp; Access Layer</div>
+
+          <div class="arch-row iot">
+            <div class="arch-node">
+              <div class="ai" style="background:rgba(0,229,255,.14);color:var(--cyan)">&#128225;</div>
+              <b>Wi-Fi / MQTT</b><span>Encrypted telemetry</span>
+            </div>
+            <div class="arch-node">
+              <div class="ai" style="background:rgba(0,230,118,.14);color:var(--green)">&#9729;</div>
+              <b>Cloud Database</b><span>Time-series store</span>
+            </div>
+            <div class="arch-node">
+              <div class="ai" style="background:rgba(255,200,0,.14);color:var(--yellow)">&#128200;</div>
+              <b>Web Dashboard</b><span>Real-time analytics</span>
+            </div>
+            <div class="arch-node">
+              <div class="ai" style="background:rgba(255,255,255,.12);color:#fff">&#128722;</div>
+              <b>Mobile / Web Access</b><span>Any device</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MAIN COMPONENTS ============ -->
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="eyebrow"><span class="dot"></span> Main Components</div>
+          <h2>Built From <span class="grad-text">Proven Hardware</span></h2>
+          <p>Every component in the microgrid is selected for reliability, efficiency and real-time instrumentability.</p>
+        </div>
+        <div class="grid-3">
+          <div class="comp-card reveal">
+            <div class="ci" style="background:rgba(255,200,0,.12);color:var(--yellow)">&#9728;</div>
+            <div><h4>Solar Panel</h4><p>High-efficiency monocrystalline PV modules that convert sunlight into DC electricity.</p></div>
+          </div>
+          <div class="comp-card reveal reveal-d1">
+            <div class="ci" style="background:rgba(0,229,255,.12);color:var(--cyan)">&#9889;</div>
+            <div><h4>MPPT Charge Controller</h4><p>Extracts maximum power from the array and manages the battery charging profile.</p></div>
+          </div>
+          <div class="comp-card reveal reveal-d2">
+            <div class="ci" style="background:rgba(0,230,118,.12);color:var(--green)">&#128267;</div>
+            <div><h4>Battery Storage</h4><p>Lithium battery bank storing solar energy for night time and low-sun periods.</p></div>
+          </div>
+          <div class="comp-card reveal">
+            <div class="ci" style="background:rgba(255,171,46,.12);color:var(--orange)">&#10226;</div>
+            <div><h4>Inverter</h4><p>Converts DC battery power into clean 230V AC for household appliances.</p></div>
+          </div>
+          <div class="comp-card reveal reveal-d1">
+            <div class="ci" style="background:rgba(0,229,255,.12);color:var(--cyan)">&#128241;</div>
+            <div><h4>ESP32 / Arduino / Raspberry Pi</h4><p>The IoT brain that reads sensors, executes control logic and publishes data.</p></div>
+          </div>
+          <div class="comp-card reveal reveal-d2">
+            <div class="ci" style="background:rgba(255,200,0,.12);color:var(--yellow)">&#128273;</div>
+            <div><h4>Voltage Sensor</h4><p>Measures panel, battery and load voltages for precise monitoring.</p></div>
+          </div>
+          <div class="comp-card reveal">
+            <div class="ci" style="background:rgba(0,229,255,.12);color:var(--cyan)">&#128266;</div>
+            <div><h4>Current Sensor</h4><p>Hall-effect sensors measure current flow into storage and out to loads.</p></div>
+          </div>
+          <div class="comp-card reveal reveal-d1">
+            <div class="ci" style="background:rgba(255,77,109,.12);color:var(--red)">&#127777;</div>
+            <div><h4>Temperature Sensor</h4><p>Tracks battery and ambient temperature for thermal protection.</p></div>
+          </div>
+          <div class="comp-card reveal reveal-d2">
+            <div class="ci" style="background:rgba(0,230,118,.12);color:var(--green)">&#127960;</div>
+            <div><h4>Relay Module</h4><p>Enables remote on/off control of connected load circuits.</p></div>
+          </div>
+          <div class="comp-card reveal">
+            <div class="ci" style="background:rgba(0,229,255,.12);color:var(--cyan)">&#9729;</div>
+            <div><h4>Cloud Database</h4><p>Stores time-series energy data securely for analytics and reporting.</p></div>
+          </div>
+          <div class="comp-card reveal reveal-d1">
+            <div class="ci" style="background:rgba(255,200,0,.12);color:var(--yellow)">&#128200;</div>
+            <div><h4>Web Dashboard</h4><p>The user interface for live monitoring, control, and fault alerts.</p></div>
+          </div>
+          <div class="comp-card reveal reveal-d2">
+            <div class="ci" style="background:rgba(0,230,118,.12);color:var(--green)">&#128225;</div>
+            <div><h4>IoT Sensors &amp; Modules</h4><p>Wireless sensor nodes and gateway modules keep the system connected.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DATA FLOW ============ -->
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow"><span class="dot"></span> How Data Flows</div>
+          <h2>From Sensor to <span class="grad-cyan-green">Dashboard in Seconds</span></h2>
+        </div>
+        <div class="split">
+          <div class="split-col solution reveal">
+            <div class="tag"><span>&#128225;</span> Telemetry Pipeline</div>
+            <h3>One seamless data journey</h3>
+            <ul class="tick-list solution">
+              <li><span class="ck">&#10003;</span> Sensors sample voltage, current, power, temperature and battery level</li>
+              <li><span class="ck">&#10003;</span> ESP32 aggregates readings and publishes over encrypted MQTT</li>
+              <li><span class="ck">&#10003;</span> Cloud gateway ingests, validates and stores time-series records</li>
+              <li><span class="ck">&#10003;</span> Dashboard subscribes and renders live charts and alerts</li>
+            </ul>
+          </div>
+          <div class="split-col problem reveal reveal-d2">
+            <div class="tag"><span>&#128295;</span> Control Pipeline</div>
+            <h3>Two-way, responsive control</h3>
+            <ul class="tick-list problem">
+              <li><span class="ck">&#10005;</span> User toggles a load or mode from the dashboard</li>
+              <li><span class="ck">&#10005;</span> Command is sent to the IoT controller over MQTT</li>
+              <li><span class="ck">&#10005;</span> Relay module switches the circuit instantly</li>
+              <li><span class="ck">&#10005;</span> New state is confirmed and logged for the audit trail</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>Understand the <span class="grad-text">MPPT Core</span></h2>
+          <p>See how maximum power point tracking keeps your panels at peak output.</p>
+          <a href="mppt.html" class="btn btn-primary btn-lg">Explore MPPT Technology <span>&#10148;</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

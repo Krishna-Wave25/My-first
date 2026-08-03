@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Applications — rural electrification, smart homes, education, agriculture, telecom towers, small industries, emergency backup, EV charging and smart city infrastructure." />
+  <title>Applications | SolarGrid MPPT</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("sg-theme");
+      if (!t) {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+  </script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <header id="nav"></header>
+
+  <main>
+    <section class="page-hero">
+      <canvas id="energyCanvas" data-particles aria-hidden="true"></canvas>
+      <div class="container">
+        <div class="eyebrow reveal visible"><span class="dot"></span> Applications</div>
+        <h1 class="reveal visible">One Microgrid, <span class="grad-text">Countless Uses</span></h1>
+        <p class="reveal reveal-d1 visible">A flexible, scalable energy platform that adapts to homes, farms, industries and entire cities.</p>
+        <div class="crumbs reveal reveal-d2 visible"><a href="index.html">Home</a> <span>&#8250;</span> <span style="color:var(--yellow)">Applications</span></div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:20px">
+      <div class="container">
+        <div class="app-grid">
+          <div class="app-card reveal">
+            <span class="num">01</span>
+            <div class="ai" style="background:rgba(255,200,0,.12);color:var(--yellow)">&#127979;</div>
+            <div><h3>Rural Electrification</h3><p>Reliable off-grid power for remote villages with solar arrays, storage and smart load management.</p></div>
+          </div>
+          <div class="app-card reveal reveal-d1">
+            <span class="num">02</span>
+            <div class="ai" style="background:rgba(0,229,255,.12);color:var(--cyan)">&#127969;</div>
+            <div><h3>Smart Homes</h3><p>Rooftop solar with battery backup, app-based control and automatic appliance scheduling.</p></div>
+          </div>
+          <div class="app-card reveal reveal-d2">
+            <span class="num">03</span>
+            <div class="ai" style="background:rgba(0,230,118,.12);color:var(--green)">&#127979;</div>
+            <div><h3>Educational Institutions</h3><p>Schools and colleges get clean power plus a live energy lab for students to study renewables.</p></div>
+          </div>
+          <div class="app-card reveal">
+            <span class="num">04</span>
+            <div class="ai" style="background:rgba(0,230,118,.12);color:var(--green)">&#127806;</div>
+            <div><h3>Agriculture &amp; Irrigation</h3><p>Solar-powered water pumps with irrigation scheduling driven by weather forecasts.</p></div>
+          </div>
+          <div class="app-card reveal reveal-d1">
+            <span class="num">05</span>
+            <div class="ai" style="background:rgba(0,229,255,.12);color:var(--cyan)">&#128241;</div>
+            <div><h3>Telecom Towers</h3><p>Continuous power for remote BTS towers, cutting diesel dependence and OPEX.</p></div>
+          </div>
+          <div class="app-card reveal reveal-d2">
+            <span class="num">06</span>
+            <div class="ai" style="background:rgba(255,200,0,.12);color:var(--yellow)">&#127979;</div>
+            <div><h3>Small Industries</h3><p>Affordable, reliable power for workshops and factories with peak-shaving control.</p></div>
+          </div>
+          <div class="app-card reveal">
+            <span class="num">07</span>
+            <div class="ai" style="background:rgba(255,77,109,.12);color:var(--red)">&#9888;</div>
+            <div><h3>Emergency Backup Systems</h3><p>Instant backup for hospitals, shelters and critical infrastructure during outages.</p></div>
+          </div>
+          <div class="app-card reveal reveal-d1">
+            <span class="num">08</span>
+            <div class="ai" style="background:rgba(0,229,255,.12);color:var(--cyan)">&#128268;</div>
+            <div><h3>EV Charging Stations</h3><p>Solar-fed EV chargers with scheduled off-peak charging and smart load balancing.</p></div>
+          </div>
+          <div class="app-card reveal reveal-d2">
+            <span class="num">09</span>
+            <div class="ai" style="background:rgba(255,200,0,.12);color:var(--yellow)">&#127961;</div>
+            <div><h3>Smart City Infrastructure</h3><p>Street lighting, traffic systems and public buildings powered by connected microgrids.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BENEFITS ============ -->
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow"><span class="dot"></span> Why It Delivers</div>
+          <h2>Benefits Across <span class="grad-cyan-green">Every Deployment</span></h2>
+        </div>
+        <div class="grid-3">
+          <div class="card reveal">
+            <div class="icn"><span>&#11088;</span></div>
+            <h3>Maximum Solar Extraction</h3>
+            <p>MPPT keeps every panel at peak output, capturing the maximum possible energy.</p>
+          </div>
+          <div class="card reveal reveal-d1">
+            <div class="icn cyan"><span>&#128253;</span></div>
+            <h3>Reduced Energy Wastage</h3>
+            <p>Smart control and live insight eliminate losses across generation, storage and use.</p>
+          </div>
+          <div class="card reveal reveal-d2">
+            <div class="icn green"><span>&#128267;</span></div>
+            <h3>Better Battery Management</h3>
+            <p>Intelligent charging profiles extend battery life and maintain capacity.</p>
+          </div>
+          <div class="card reveal">
+            <div class="icn"><span>&#128200;</span></div>
+            <h3>Real-time Monitoring &amp; Control</h3>
+            <p>Full visibility and remote control from any device, anywhere.</p>
+          </div>
+          <div class="card reveal reveal-d1">
+            <div class="icn cyan"><span>&#128176;</span></div>
+            <h3>Lower Electricity Cost</h3>
+            <p>More self-generated solar and smart scheduling cut utility bills significantly.</p>
+          </div>
+          <div class="card reveal reveal-d2">
+            <div class="icn green"><span>&#127793;</span></div>
+            <h3>Reliable &amp; Sustainable</h3>
+            <p>Ideal for remote areas while supporting clean, sustainable energy goals.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>The Journey Doesn't <span class="grad-text">End Here</span></h2>
+          <p>Discover the roadmap — AI optimization, EV integration, blockchain energy trading and more.</p>
+          <a href="future.html" class="btn btn-primary btn-lg">Explore Future Scope <span>&#10148;</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

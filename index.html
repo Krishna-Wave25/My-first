@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="IoT-Based Solar Microgrid Energy Management System with MPPT — intelligent solar microgrid management powered by IoT, MPPT optimization, and real-time energy analytics." />
+  <title>SolarGrid MPPT | IoT-Based Solar Microgrid Energy Management System</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("sg-theme");
+      if (!t) {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+  </script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <header id="nav"></header>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="home">
+      <canvas id="energyCanvas" data-particles aria-hidden="true"></canvas>
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div class="hero-badge reveal visible"><span class="bolt">&#9889;</span> Live Solar Microgrid Platform</div>
+            <h1 class="reveal visible">Power Your Future with <span class="grad-text">Intelligent Solar Microgrids</span></h1>
+            <p class="lead reveal reveal-d1 visible">IoT-Based Solar Microgrid Energy Management System with MPPT — intelligent solar microgrid management powered by IoT, MPPT optimization, and real-time energy analytics.</p>
+            <div class="hero-actions reveal reveal-d2 visible">
+              <a href="dashboard.html" class="btn btn-primary btn-lg">Launch Live Dashboard <span>&#10148;</span></a>
+              <a href="architecture.html" class="btn btn-ghost btn-lg">Explore the System</a>
+            </div>
+            <div class="hero-stats reveal reveal-d3 visible">
+              <div class="hstat">
+                <b><span data-count="98" data-suffix="%">0</span><em>+</em></b>
+                <span>MPPT Efficiency</span>
+              </div>
+              <div class="hstat">
+                <b><span data-count="24" data-suffix="/7">0</span></b>
+                <span>Real-time Monitoring</span>
+              </div>
+              <div class="hstat">
+                <b><span data-count="60" data-suffix="%">0</span><em>+</em></b>
+                <span>Energy Savings</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-visual reveal reveal-d2 visible">
+            <div class="hero-panel">
+              <div class="panel-head">
+                <div class="t"><span>Live System Feed</span></div>
+                <div class="live-pill">
+                  <span>LIVE</span>
+                  <div class="bar"><i></i><i></i><i></i><i></i></div>
+                </div>
+              </div>
+              <div class="panel-cols">
+                <div class="mini-card">
+                  <div class="k">Solar Power</div>
+                  <div class="v" id="heroPower">1,248 <small>W</small></div>
+                </div>
+                <div class="mini-card">
+                  <div class="k">Battery</div>
+                  <div class="v" id="heroBatt">82 <small>%</small></div>
+                </div>
+                <div class="mini-card">
+                  <div class="k">Load</div>
+                  <div class="v" id="heroLoad">640 <small>W</small></div>
+                </div>
+                <div class="mini-card">
+                  <div class="k">Efficiency</div>
+                  <div class="v" id="heroEff">96.4 <small>%</small></div>
+                </div>
+              </div>
+              <div class="spark" data-spark="2,3,2.2,3.6,3,4.2,3.6,4.8,4.2,5,4.6" data-spark-color="#ffc800"></div>
+              <div class="battery">
+                <div class="bt"><span>Battery Storage &middot; LiFePO&#8324;</span><b id="heroBattTxt">82%</b></div>
+                <div class="bat-track"><div class="bat-fill" id="heroBatFill"></div></div>
+              </div>
+              <div class="panel-ticker">
+                <span>GRID: <span class="ok" id="heroGrid">OFF-GRID</span></span>
+                <span>FAULT: <span class="ok" id="heroFault">NONE</span></span>
+                <span>&#127777; <span id="heroTemp">31.2&deg;C</span></span>
+              </div>
+            </div>
+            <div class="float-card fc-1">
+              <div class="ic"><span>&#9889;</span></div>
+              <div><b id="fcEnergy">8.4 kWh</b><span>Generated today</span></div>
+            </div>
+            <div class="float-card cyan fc-2">
+              <div class="ic"><span>&#9729;</span></div>
+              <div><b id="fcCo2">6.2 kg</b><span>CO&#8322; saved</span></div>
+            </div>
+            <div class="float-card green fc-3">
+              <div class="ic"><span>&#128225;</span></div>
+              <div><b>IoT Connected</b><span>42 sensors online</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STAT BAND ============ -->
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="stat-band reveal">
+          <div class="stat">
+            <div class="num grad-text" data-count="12.4" data-decimals="1" data-suffix=" kWh"><span></span></div>
+            <div class="lbl">Peak Daily Generation</div>
+          </div>
+          <div class="stat">
+            <div class="num" style="color:var(--cyan)" data-count="98" data-suffix="%"><span></span></div>
+            <div class="lbl">MPPT Tracking Efficiency</div>
+          </div>
+          <div class="stat">
+            <div class="num" style="color:var(--green)" data-count="42" data-suffix=""><span></span></div>
+            <div class="lbl">IoT Sensors Connected</div>
+          </div>
+          <div class="stat">
+            <div class="num" style="color:var(--yellow)" data-count="1.8" data-decimals="1" data-suffix=" t"><span></span></div>
+            <div class="lbl">CO&#8322; Reduced / Year</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT / INTRO ============ -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="eyebrow"><span class="dot"></span> Project Overview</div>
+          <h2>A Complete Smart <span class="grad-cyan-green">Renewable Energy</span> Solution</h2>
+          <p>The system combines MPPT control, IoT-based sensing, battery storage, cloud monitoring, and a web dashboard to provide real-time insights into solar generation, battery status, load consumption, and system efficiency.</p>
+        </div>
+        <div class="grid-3">
+          <div class="card reveal">
+            <div class="icn"><span>&#9728;</span></div>
+            <h3>Maximum Solar Extraction</h3>
+            <p>MPPT continuously adjusts panel operating point so maximum power is captured under changing sunlight and temperature conditions.</p>
+          </div>
+          <div class="card reveal reveal-d1">
+            <div class="icn cyan"><span>&#128225;</span></div>
+            <h3>IoT Real-time Sensing</h3>
+            <p>Voltage, current, power, temperature and load sensors stream live data over Wi-Fi to the cloud for instant visibility and control.</p>
+          </div>
+          <div class="card reveal reveal-d2">
+            <div class="icn green"><span>&#128200;</span></div>
+            <h3>Cloud Analytics Dashboard</h3>
+            <p>An interactive web dashboard visualizes energy flow, battery state, efficiency, alerts and CO&#8322; savings in real time.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROBLEM / SOLUTION ============ -->
+    <section class="section" id="problem" style="padding-top:40px">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow"><span class="dot"></span> Why This System</div>
+          <h2>From Energy Loss to <span class="grad-text">Intelligent Control</span></h2>
+        </div>
+        <div class="split">
+          <div class="split-col problem reveal">
+            <div class="tag"><span>&#9888;</span> The Problem</div>
+            <h3>Traditional systems waste solar energy</h3>
+            <p>Solar panel output constantly changes with sunlight, temperature, battery condition and load demand. Without intelligent control:</p>
+            <ul class="tick-list problem">
+              <li><span class="ck">&#10005;</span> Energy is wasted when panels run off their maximum power point</li>
+              <li><span class="ck">&#10005;</span> Battery life is reduced by poor charging and deep discharge</li>
+              <li><span class="ck">&#10005;</span> Faults go undetected for long periods, damaging hardware</li>
+              <li><span class="ck">&#10005;</span> No visibility into generation, load or system efficiency</li>
+            </ul>
+          </div>
+          <div class="split-col solution reveal reveal-d2">
+            <div class="tag"><span>&#10003;</span> The Solution</div>
+            <h3>An intelligent, connected microgrid</h3>
+            <p>MPPT extracts maximum solar power while IoT technology monitors every parameter in real time and uploads it to the cloud:</p>
+            <ul class="tick-list solution">
+              <li><span class="ck">&#10003;</span> MPPT tracking maximizes power extraction under all conditions</li>
+              <li><span class="ck">&#10003;</span> Live monitoring of voltage, current, power &amp; temperature</li>
+              <li><span class="ck">&#10003;</span> Cloud database stores data for analytics and reporting</li>
+              <li><span class="ck">&#10003;</span> Dashboard detects faults and manages loads remotely</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ARCHITECTURE PREVIEW ============ -->
+    <section class="section" id="architecture">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow"><span class="dot"></span> System Architecture</div>
+          <h2>Energy Flow, <span class="grad-cyan-green">End to End</span></h2>
+          <p>From solar panel to intelligent dashboard — every stage is monitored, controlled and optimized.</p>
+        </div>
+        <div class="flow-wrap reveal">
+          <div class="flow">
+            <div class="flow-node">
+              <div class="ficn" style="background:rgba(255,200,0,.14);color:var(--yellow)">&#9728;</div>
+              <b>Solar Panel</b><span>PV array input</span>
+            </div>
+            <div class="flow-arrow">&#10148;</div>
+            <div class="flow-node">
+              <div class="ficn" style="background:rgba(0,229,255,.14);color:var(--cyan)">&#9889;</div>
+              <b>MPPT Controller</b><span>Max power point</span>
+            </div>
+            <div class="flow-arrow">&#10148;</div>
+            <div class="flow-node">
+              <div class="ficn" style="background:rgba(0,230,118,.14);color:var(--green)">&#128267;</div>
+              <b>Battery Storage</b><span>Energy reservoir</span>
+            </div>
+            <div class="flow-arrow">&#10148;</div>
+            <div class="flow-node">
+              <div class="ficn" style="background:rgba(255,171,46,.14);color:var(--orange)">&#10226;</div>
+              <b>Inverter</b><span>DC &rarr; AC</span>
+            </div>
+            <div class="flow-arrow">&#10148;</div>
+            <div class="flow-node">
+              <div class="ficn" style="background:rgba(255,255,255,.12);color:#fff">&#127776;</div>
+              <b>AC / DC Loads</b><span>Consumption</span>
+            </div>
+          </div>
+          <div class="flow mt-2">
+            <div class="flow-node" style="max-width:240px">
+              <div class="ficn" style="background:rgba(0,229,255,.14);color:var(--cyan)">&#128241;</div>
+              <b>IoT Controller</b><span>ESP32 / Arduino / Pi</span>
+            </div>
+            <div class="flow-arrow">&#10148;</div>
+            <div class="flow-node" style="max-width:240px">
+              <div class="ficn" style="background:rgba(0,230,118,.14);color:var(--green)">&#9729;</div>
+              <b>Cloud Database</b><span>Secure data store</span>
+            </div>
+            <div class="flow-arrow">&#10148;</div>
+            <div class="flow-node" style="max-width:240px">
+              <div class="ficn" style="background:rgba(255,200,0,.14);color:var(--yellow)">&#128200;</div>
+              <b>Web Dashboard</b><span>Live analytics</span>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-3 reveal">
+          <a href="architecture.html" class="btn btn-ghost">View Full Architecture <span>&#10148;</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MPPT HIGHLIGHT ============ -->
+    <section class="section" id="mppt" style="padding-top:40px">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow"><span class="dot"></span> MPPT Technology</div>
+          <h2>Every Watt, <span class="grad-text">Captured</span></h2>
+          <p>Maximum Power Point Tracking continuously adjusts the operating voltage and current so the panel always delivers its peak power.</p>
+        </div>
+        <div class="grid-4">
+          <div class="card reveal text-center">
+            <div class="icn" style="margin-inline:auto"><span>&#8645;</span></div>
+            <h3>Perturb &amp; Observe</h3>
+            <p>Classic hill-climbing algorithm that perturbs voltage and observes power change.</p>
+          </div>
+          <div class="card reveal reveal-d1 text-center">
+            <div class="icn cyan" style="margin-inline:auto"><span>&#8721;</span></div>
+            <h3>Incremental Conductance</h3>
+            <p>Compares conductance to track the MPP with high precision and stability.</p>
+          </div>
+          <div class="card reveal reveal-d2 text-center">
+            <div class="icn green" style="margin-inline:auto"><span>&#9678;</span></div>
+            <h3>Fuzzy Logic MPPT</h3>
+            <p>Rule-based intelligence adapts quickly under fast-changing irradiance.</p>
+          </div>
+          <div class="card reveal reveal-d3 text-center">
+            <div class="icn" style="margin-inline:auto;background:linear-gradient(145deg,rgba(255,200,0,.2),rgba(0,229,255,.12));border-color:rgba(255,200,0,.35);color:var(--yellow)"><span>&#9889;</span></div>
+            <h3>AI-Based MPPT</h3>
+            <p>Machine-learning models forecast the optimum point for maximum yield.</p>
+          </div>
+        </div>
+        <div class="text-center mt-3 reveal">
+          <a href="mppt.html" class="btn btn-outline-yellow">Dive Into MPPT Algorithms <span>&#10148;</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DASHBOARD PREVIEW ============ -->
+    <section class="section" id="dashboard" style="padding-top:40px">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow"><span class="dot"></span> Live Dashboard</div>
+          <h2>Your Entire Microgrid, <span class="grad-cyan-green">In One View</span></h2>
+          <p>A real-time control center with live metrics, interactive charts, fault alerts and remote load control.</p>
+        </div>
+        <div class="card reveal" style="padding:0;overflow:hidden">
+          <div class="energy-strip" style="border:none;border-radius:0">
+            <h3>Energy Flow <span class="chip green" style="margin-left:auto">SIMULATION LIVE</span></h3>
+            <div class="eflow">
+              <div class="estep"><div class="ei" style="background:rgba(255,200,0,.14);color:var(--yellow)">&#9728;</div><b id="pvW">1,248 W</b><span>Solar Input</span></div>
+              <div class="econn">&#10148;</div>
+              <div class="estep"><div class="ei" style="background:rgba(0,229,255,.14);color:var(--cyan)">&#9889;</div><b id="mpptW">1,204 W</b><span>MPPT Output</span></div>
+              <div class="econn">&#10148;</div>
+              <div class="estep"><div class="ei" style="background:rgba(0,230,118,.14);color:var(--green)">&#128267;</div><b id="battState">Charging</b><span>Battery Bank</span></div>
+              <div class="econn">&#10148;</div>
+              <div class="estep"><div class="ei" style="background:rgba(255,171,46,.14);color:var(--orange)">&#10226;</div><b id="invW">1,140 W</b><span>Inverter</span></div>
+              <div class="econn">&#10148;</div>
+              <div class="estep"><div class="ei" style="background:rgba(255,255,255,.12);color:#fff">&#127776;</div><b id="loadW">640 W</b><span>Active Load</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-3 reveal">
+          <a href="dashboard.html" class="btn btn-primary">Open the Live Dashboard <span>&#10148;</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ APPLICATIONS PREVIEW ============ -->
+    <section class="section" id="applications" style="padding-top:40px">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow"><span class="dot"></span> Applications</div>
+          <h2>Powering <span class="grad-text">Everywhere</span></h2>
+          <p>From remote villages to smart cities — a flexible microgrid for every energy need.</p>
+        </div>
+        <div class="app-grid">
+          <div class="app-card reveal">
+            <div class="ai" style="background:rgba(255,200,0,.12);color:var(--yellow)">&#127969;</div>
+            <div><h3>Smart Homes</h3><p>Rooftop solar with battery backup and app-based energy control.</p></div>
+          </div>
+          <div class="app-card reveal reveal-d1">
+            <div class="ai" style="background:rgba(0,230,118,.12);color:var(--green)">&#127806;</div>
+            <div><h3>Agriculture &amp; Irrigation</h3><p>Solar-powered pumps with intelligent scheduling and monitoring.</p></div>
+          </div>
+          <div class="app-card reveal reveal-d2">
+            <div class="ai" style="background:rgba(0,229,255,.12);color:var(--cyan)">&#127979;</div>
+            <div><h3>Rural Electrification</h3><p>Reliable off-grid power for villages and remote communities.</p></div>
+          </div>
+        </div>
+        <div class="text-center mt-3 reveal">
+          <a href="applications.html" class="btn btn-ghost">See All Applications <span>&#10148;</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BENEFITS ============ -->
+    <section class="section" id="benefits" style="padding-top:40px">
+      <div class="container">
+        <div class="grid-3">
+          <div class="card reveal">
+            <div class="icn green"><span>&#11088;</span></div>
+            <h3>Maximum Energy Extraction</h3>
+            <p>MPPT keeps panels at peak output, capturing every possible watt from sunlight.</p>
+          </div>
+          <div class="card reveal reveal-d1">
+            <div class="icn cyan"><span>&#128257;</span></div>
+            <h3>Reduced Energy Wastage</h3>
+            <p>Smart control and real-time insight eliminate avoidable losses across the microgrid.</p>
+          </div>
+          <div class="card reveal reveal-d2">
+            <div class="icn"><span>&#128267;</span></div>
+            <h3>Better Battery Management</h3>
+            <p>Intelligent charging profiles protect batteries, extending life and capacity.</p>
+          </div>
+          <div class="card reveal">
+            <div class="icn green"><span>&#128200;</span></div>
+            <h3>Real-time Control</h3>
+            <p>Monitor and manage the entire system from any device, anywhere.</p>
+          </div>
+          <div class="card reveal reveal-d1">
+            <div class="icn cyan"><span>&#128176;</span></div>
+            <h3>Lower Electricity Cost</h3>
+            <p>More self-generated solar energy means smaller utility bills.</p>
+          </div>
+          <div class="card reveal reveal-d2">
+            <div class="icn"><span>&#127793;</span></div>
+            <h3>Sustainable &amp; Clean</h3>
+            <p>Supports clean energy goals with measurable CO&#8322; emission reduction.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="section" style="padding-top:40px">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>Ready to See the <span class="grad-text">System in Action?</span></h2>
+          <p>Explore the live dashboard, dive into the analytics, or get in touch to discuss a deployment for your site.</p>
+          <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+            <a href="dashboard.html" class="btn btn-primary btn-lg">Try Live Demo <span>&#10148;</span></a>
+            <a href="contact.html" class="btn btn-ghost btn-lg">Contact Us</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer"></footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>
