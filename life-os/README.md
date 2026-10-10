@@ -25,7 +25,7 @@ Stack: React 18 · TypeScript · Vite · Dexie (IndexedDB) · chrono-node (date 
 cd life-os
 npm install
 npm run dev            # http://localhost:5173
-npm test               # 44 unit tests (vitest)
+npm test               # 45 unit tests (vitest)
 npm run e2e            # 26 browser tests incl. axe accessibility scans (Playwright)
 npm run build          # type-check + production build into dist/
 ```
@@ -103,8 +103,8 @@ Legend: ✅ working & tested · 🟡 working, limited · ❌ not built
 - ❌ Trending-topic / keyword-volume / competitor data and YouTube Analytics (need an authorised provider; never invented)
 
 **Phase 5 — assistant & automation**
-- ✅ Assistant with 13 tools over your real data; **read tools run immediately, every write tool requires explicit approval** (tested)
-- ✅ Offline mode (no key): plan my day, overdue, today, briefing, weekly review, search, "add …" (with confirmation)
+- ✅ Assistant with 18 tools over your real data; **read tools run immediately, every write tool requires explicit approval** (tested)
+- ✅ Offline mode (no key): plan my day, overdue, today, briefing, weekly review, search, "add …" (with confirmation), ways to earn, next skills to learn, career portals, project status, YouTube channel plan — answered from the app's curated content and your data (open-ended questions still need an AI key)
 - ✅ Configurable schedules for briefing, morning plan, deadline alerts, evening review, weekly review, tech summary, opportunity deadlines (day before + day of)
 - 🟡 Notifications: the plan is computed and tested; Android scheduling code is in place and Settings reports how many are actually pending — **not yet verified on a physical device**
 - ❌ Server-side background jobs, email, remote push
@@ -122,7 +122,7 @@ Legend: ✅ working & tested · 🟡 working, limited · ❌ not built
 
 ## Testing
 
-* `npm test` — 44 unit tests: NL parsing, recurrence, planner, time zones, scoring, RSS/Atom/RDF parsing, ranking/dedupe/clickbait, fixture-network refresh, assistant confirmation gate (mock API), notification plan, ATS, wiring safety, finance maths, backup, PIN.
+* `npm test` — 45 unit tests: NL parsing, recurrence, planner, time zones, scoring, RSS/Atom/RDF parsing, ranking/dedupe/clickbait, fixture-network refresh, assistant confirmation gate (mock API), notification plan, ATS, wiring safety, finance maths, backup, PIN.
 * `npm run e2e` — 26 Playwright tests: all 11 sections, desktop/tablet/phone layouts (no horizontal overflow), persistence after reload, tasks/recurrence/review/notes/habits, five-story briefing from fixture feeds, honest empty/failed states, tracker, finance, career, projects & safety flags, YouTube, assistant confirmation, settings/export (API key excluded), PIN lock, axe scans (dark + light).
 
 ## Roadmap (to reach the original brief)

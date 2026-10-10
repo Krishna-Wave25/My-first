@@ -71,7 +71,7 @@ export async function applyLocalActions(s: Settings, p: LocalPending, decisions:
 }
 
 const HELP =
-  "Without an AI key I can still run these on your data: “plan my day”, “show my overdue tasks”, “what's due today”, “today's briefing”, “review my progress this week”, “search <words>”, and “add <task in plain English>” (e.g. “add tomorrow 7am spend 45 minutes learning AI automation”). Add an Anthropic API key in Settings → AI for open-ended help.";
+  "I'm in offline mode, so I only understand certain requests. Try: “plan my day”, “show my overdue tasks”, “what's due today”, “today's briefing”, “review my progress this week”, “ways to earn my first ₹1,000”, “what skills should I learn this month”, “find internships”, “help me finish my project”, “video idea for MONEYVARK”, “search <words>”, or “add <task in plain English>” (e.g. “add tomorrow 7am spend 45 minutes learning AI automation”). For anything else, add an Anthropic API key in Settings → AI.";
 
 /** Offline intent router — real actions on real data, no model required. */
 export async function localAssistant(s: Settings, text: string): Promise<TurnOutcome> {
@@ -80,6 +80,15 @@ export async function localAssistant(s: Settings, text: string): Promise<TurnOut
   const done = (reply: string): TurnOutcome => ({ text: reply, messages: [], pending: null });
   let m: RegExpMatchArray | null;
 
+  // Questions from the brief that the app can answer from its own curated content and your data (no AI needed)
+  if (/\b(earn|make money|side hustle|income|first ₹|first rs|₹\s?1,?000)\b|ways to earn/i.test(t)) return done(await run("opportunity_ideas", {}));
+  if (/\b(internships?|jobs?|scholarships?|certifications?)\b/i.test(t) && !/^\s*(add|create|remind)/i.test(t)) return done(await run("career_pointers", {}));
+  if (/\b(skills?|roadmap|learn(ing)?)\b.*\b(month|learn|study|next|should)\b|what.*\b(learn|study)\b/i.test(t)) return done(await run("learning_next", {}));
+  if (/\b(project|viva|microgrid|simulink)\b.*\b(finish|help|status|left|next)\b|\bfinish\b.*\bproject\b/i.test(t)) return done(await run("project_status", {}));
+  if (/\b(video|youtube|moneyvark|zilvorex)\b/i.test(t)) {
+    const ch = /moneyvark/i.test(t) ? "MONEYVARK" : /zilvorex/i.test(t) ? "ZILVOREX" : undefined;
+    return done((await run("channel_ideas", { channel: ch })) + "\n\nI can't invent fresh, specific ideas without an AI key. Add one in Settings → AI, or add your own in YouTube Studio.");
+  }
   if (/\b(plan|schedule)\b.*\b(day|today|tomorrow)\b|\bplan my day\b/i.test(t)) {
     const tomorrow = /tomorrow/i.test(t);
     const d = new Date(); if (tomorrow) d.setDate(d.getDate() + 1);

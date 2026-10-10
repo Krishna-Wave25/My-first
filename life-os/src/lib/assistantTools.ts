@@ -9,6 +9,10 @@ import type { Settings } from "./settings";
 import { addTask, bucketOf, completeTask, compareTasks, postponeTask } from "./tasks";
 import { suggestPlan } from "./scheduler";
 import { dayKey, fmtDue } from "./dates";
+import { PLAYBOOKS, OFFICIAL_PORTALS, ESTIMATE_NOTE } from "../content/opportunities";
+import { ROADMAPS } from "../content/career";
+import { CHANNELS, TITLE_FORMULAS, TITLE_NOTE } from "../content/youtube";
+import { lintConnection, type Connection } from "./safety";
 
 export interface ToolSpec {
   def: ToolDef;
@@ -89,6 +93,75 @@ export const TOOLS: ToolSpec[] = [
         .filter((a) => a.publishedAt && new Date(a.publishedAt).getTime() >= cutoff && (!i.topic || a.topic === i.topic))
         .sort((a, b) => b.publishedAt!.localeCompare(a.publishedAt!)).slice(0, Math.min(Number(i.limit) || 10, 20));
       return list.length ? list.map((a) => `- ${a.title} — ${a.source}, ${a.publishedAt} — ${a.url}\n  ${a.summary.slice(0, 180)}`).join("\n") : "No stored articles match. The user may need to refresh News, or feeds may be unreachable.";
+    },
+  },
+  {
+    def: { name: "opportunity_ideas", description: "Beginner-friendly, low-cost ways to earn (curated playbooks with risks and a first action). Use for 'earn my first ₹1,000', side hustles, online income. Estimates are illustrative, never guaranteed.", input_schema: { type: "object", properties: {} } },
+    write: false,
+    describe: () => "Look up earning ideas",
+    run: async () => {
+      const picks = ["tutoring", "video-editing", "content-writing", "freelance-web", "ai-automation"].map((id) => PLAYBOOKS.find((p) => p.id === id)!);
+      return [ESTIMATE_NOTE, "", ...picks.map((p, i) => `${i + 1}. ${p.name} — ${p.difficulty}, competition ${p.competition}, start cost ${p.startCost}\n   First action (~${p.firstAction.minutes} min): ${p.firstAction.title}\n   Time to first income: ${p.timeToFirstIncome}\n   Main risk: ${p.risks[0]}`), "", "Full plans: Earn Money tab → “First ₹1,000 plan”. Never pay a fee to get work."].join("\n");
+    },
+  },
+  {
+    def: { name: "learning_next", description: "The user's next unfinished skill-roadmap steps (AI & Automation, Embedded/IoT, Web, Finance).", input_schema: { type: "object", properties: {} } },
+    write: false,
+    describe: () => "Check learning roadmaps",
+    run: async () => {
+      const prog = await db.roadmapProgress.toArray();
+      return ROADMAPS.map((r) => {
+        const todo = r.steps.filter((st) => !prog.some((x) => x.id === `${r.id}:${st.id}` && x.done));
+        const done = r.steps.length - todo.length;
+        return `${r.name} (${done}/${r.steps.length} done)\n` + (todo.slice(0, 3).map((st) => `  • [${st.stage}] ${st.title}${st.resource ? " — " + st.resource.url : ""}${st.project ? `\n    project: ${st.project}` : ""}`).join("\n") || "  All steps complete.");
+      }).join("\n");
+    },
+  },
+  {
+    def: { name: "career_pointers", description: "Where to find real internships, scholarships and certifications (official portals) plus what the user is tracking. Cannot list individual postings.", input_schema: { type: "object", properties: {} } },
+    write: false,
+    describe: () => "Look up career portals",
+    run: async () => {
+      const mine = (await db.opportunities.toArray()).filter((o) => ["job", "internship", "scholarship", "certification"].includes(o.kind));
+      const lines = ["I can't list individual postings (I can't verify them). Official places to look:", ...["Internships", "Scholarships", "Certifications"].flatMap((g) => OFFICIAL_PORTALS[g].map((p) => `  • ${g}: ${p.name} — ${p.url}`))];
+      lines.push("", mine.length ? "You're tracking:\n" + mine.map((o) => `  • ${o.name} (${o.kind}) — ${o.status}${o.deadline ? ", deadline " + o.deadline : ""}${o.meta?.verified ? "" : " [unverified]"}`).join("\n") : "You're not tracking any yet — use Career → Opportunities → Track. Check the ATS resume tool first.", "", "Always confirm eligibility, stipend and deadline on the official page. Legitimate employers never charge application fees.");
+      return lines.join("\n");
+    },
+  },
+  {
+    def: { name: "project_status", description: "Status of the user's engineering projects: milestones, next deadline, open issues, wiring safety flags, viva readiness.", input_schema: { type: "object", properties: {} } },
+    write: false,
+    describe: () => "Check project status",
+    run: async () => {
+      const projects = await db.projects.toArray();
+      if (!projects.length) return "No project workspace yet. Create one in Projects (the IoT Solar Microgrid template adds milestones, documents and viva questions).";
+      const out: string[] = [];
+      for (const p of projects) {
+        const items = await db.projectItems.where("projectId").equals(p.id).toArray();
+        const ms = items.filter((i) => i.type === "milestone");
+        const doneN = ms.filter((m) => m.data.status === "done").length;
+        const next = ms.filter((m) => m.data.status !== "done").sort((a, b) => String(a.data.due || "9999").localeCompare(String(b.data.due || "9999")))[0];
+        const conns = items.filter((i) => i.type === "connection").map((i) => i.data as Connection);
+        const danger = conns.filter((c) => lintConnection(c).some((f) => f.level === "danger")).length;
+        const viva = items.filter((i) => i.type === "viva");
+        const tests = items.filter((i) => i.type === "test");
+        out.push([`${p.name}: ${doneN}/${ms.length} milestones done.`,
+          next ? `  Next: ${next.data.title}${next.data.due ? " (due " + next.data.due + ")" : " (no date set)"}` : "  No open milestones.",
+          `  Wiring: ${conns.filter((c) => c.status === "confirmed").length} confirmed, ${conns.filter((c) => c.status !== "confirmed").length} proposed${danger ? `, ⚠ ${danger} with DANGER flags — review before powering anything` : ""}`,
+          `  Tests: ${tests.filter((t) => t.data.result === "pass").length} pass / ${tests.filter((t) => t.data.result === "fail").length} fail / ${tests.filter((t) => (t.data.result ?? "pending") === "pending").length} pending`,
+          `  Open issues: ${items.filter((i) => i.type === "log" && !i.data.resolved).length}; viva answered: ${viva.filter((v) => v.data.answer).length}/${viva.length}`].join("\n"));
+      }
+      return out.join("\n\n");
+    },
+  },
+  {
+    def: { name: "channel_ideas", description: "YouTube channel context for MONEYVARK or ZILVOREX: content pillars, ideas already in the pipeline, title formulas. Use before suggesting new video ideas.", input_schema: { type: "object", properties: { channel: { type: "string", enum: ["MONEYVARK", "ZILVOREX"] } } } },
+    write: false,
+    describe: (i) => `Look up ${i.channel ?? "channel"} content plan`,
+    run: async (i) => {
+      const chans = (i.channel ? [i.channel] : ["MONEYVARK", "ZILVOREX"]) as ("MONEYVARK" | "ZILVOREX")[];
+      const ideas = await db.videoIdeas.toArray();
+      return chans.map((c) => { const mine = ideas.filter((v) => v.channel === c && v.stage !== "published"); return `${c} — ${CHANNELS[c].tagline}\n  Pillars: ${CHANNELS[c].pillars.join("; ")}\n  In pipeline (${mine.length}): ${mine.slice(0, 6).map((v) => `${v.title} [${v.stage}]`).join("; ") || "none"}`; }).join("\n\n") + `\n\nTitle formulas (heuristics, not verified data):\n- ${TITLE_FORMULAS.join("\n- ")}\n${TITLE_NOTE}`;
     },
   },
   {

@@ -84,6 +84,31 @@ describe("assistant: offline mode", () => {
     expect(t.durationMin).toBe(45);
     expect(t.source).toBe("assistant");
   });
+  it("answers the brief's example questions offline from app content and data", async () => {
+    const earn = (await localAssistant(S, "Find legitimate ways to earn my first ₹1,000 online")).text;
+    expect(earn).toMatch(/Not data and not guarantees|not guarantees/i);
+    expect(earn).toMatch(/First action/);
+    expect((await localAssistant(S, "What AI skills should I learn this month?")).text).toMatch(/AI & Automation[\s\S]*Python fundamentals/);
+    const intern = (await localAssistant(S, "Find internships relevant to my engineering background")).text;
+    expect(intern).toMatch(/can't list individual postings/);
+    expect(intern).toMatch(/internship\.aicte-india\.org/);
+    expect((await localAssistant(S, "Help me finish my engineering project")).text).toMatch(/No project workspace yet/);
+    const vid = (await localAssistant(S, "Give me a video idea for MONEYVARK")).text;
+    expect(vid).toMatch(/MONEYVARK/);
+    expect(vid).not.toMatch(/ZILVOREX —/);
+    expect(vid).toMatch(/without an AI key/);
+    // reflects real project data
+    const now = new Date().toISOString();
+    await db.projects.add({ id: "p1", name: "Microgrid", description: "", template: "blank", createdAt: now });
+    await db.projectItems.bulkAdd([
+      { id: "m1", projectId: "p1", type: "milestone", data: { title: "Sensor calibration", status: "todo", due: "2026-11-01" }, createdAt: now, updatedAt: now },
+      { id: "c1", projectId: "p1", type: "connection", data: { from: "Panel +", to: "Arduino A0", signal: "analog", voltage: 21, status: "proposed" }, createdAt: now, updatedAt: now },
+    ]);
+    const st = (await localAssistant(S, "help me finish my project")).text;
+    expect(st).toMatch(/0\/1 milestones/);
+    expect(st).toMatch(/Sensor calibration/);
+    expect(st).toMatch(/DANGER/);
+  });
   it("is honest about what it can't do", async () => {
     expect((await localAssistant(S, "write me a poem")).text).toMatch(/API key/);
   });
