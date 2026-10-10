@@ -7,7 +7,7 @@ const config: CapacitorConfig = {
   android: { allowMixedContent: false },
   plugins: {
     CapacitorHttp: { enabled: true },
-    LocalNotifications: { smallIcon: "ic_stat_icon_config_sample", iconColor: "#5eead4" },
+    LocalNotifications: { smallIcon: "ic_stat_lifeos", iconColor: "#5eead4" },
   },
 };
 

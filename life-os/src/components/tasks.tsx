@@ -33,7 +33,7 @@ export function QuickAdd({ defaults, placeholder }: { defaults?: Partial<Task>; 
     <div>
       <form className="row nw" onSubmit={(e) => { e.preventDefault(); void submit(); }}>
         <input type="text" aria-label="Quick add task in plain English" value={text} onChange={(e) => setText(e.target.value)}
-          placeholder={placeholder ?? "Try: Tomorrow at 7 AM, spend 45 minutes learning AI automation"} autoComplete="off" />
+          placeholder={placeholder ?? "e.g. Fri 5pm submit lab record, high priority"} autoComplete="off" />
         <Btn kind="primary" type="submit" disabled={!draft}>Add</Btn>
         <Btn type="button" disabled={!draft} onClick={() => draft && setEditing(toPartial())} aria-label="Add with details">⋯</Btn>
       </form>

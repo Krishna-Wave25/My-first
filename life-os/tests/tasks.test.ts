@@ -105,6 +105,13 @@ describe("daily planner", () => {
     const p = suggestPlan([t], NOW, "09:00", "21:00", NOW);
     expect(p.atRisk).toHaveLength(1);
   });
+  it("puts higher priority first even when a lower-priority task has a deadline time", () => {
+    const high = mk("High with 6pm deadline", { priority: "high", due: new Date(2025, 9, 8, 18, 0).toISOString(), hasTime: true });
+    const crit = mk("Critical no time", { priority: "critical", due: new Date(2025, 9, 8).toISOString() });
+    const p = suggestPlan([high, crit], NOW, "09:00", "21:00", NOW);
+    expect(p.blocks.map((b) => b.title)).toEqual(["Critical no time", "High with 6pm deadline"]);
+    expect(p.atRisk).toHaveLength(0);
+  });
   it("includes overdue work on today's plan", () => {
     const t = mk("Late", { priority: "medium", due: new Date(2025, 9, 6).toISOString() });
     expect(suggestPlan([t], NOW, "09:00", "21:00", NOW).blocks).toHaveLength(1);

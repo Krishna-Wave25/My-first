@@ -94,14 +94,16 @@ export function suggestPlan(tasks: Task[], day: Date, workStart: string, workEnd
     if (t.due && t.hasTime) u += 3; // has a real deadline time
     return u;
   };
-  flex.sort((a, b) => urgency(b) - urgency(a) || (a.due && b.due ? +new Date(a.due) - +new Date(b.due) : 0));
-  // among tasks with a same-day deadline time, earlier deadlines first inside equal urgency bands
+  // Order: overdue first, then importance, then the earliest real deadline time.
   flex.sort((a, b) => {
-    const ua = Math.floor(urgency(a) / 10), ub = Math.floor(urgency(b) / 10);
-    if (ua !== ub) return ub - ua;
+    const oa = overdue(a) ? 1 : 0, ob = overdue(b) ? 1 : 0;
+    if (oa !== ob) return ob - oa;
+    const pa = priorityWeight(a.priority), pb = priorityWeight(b.priority);
+    if (pa !== pb) return pb - pa;
     const da = a.due && a.hasTime ? +new Date(a.due) : Infinity;
-    const db_ = b.due && b.hasTime ? +new Date(b.due) : Infinity;
-    return da - db_;
+    const dbt = b.due && b.hasTime ? +new Date(b.due) : Infinity;
+    if (da !== dbt) return da - dbt;
+    return urgency(b) - urgency(a);
   });
 
   const flexBlocks: PlanBlock[] = [];

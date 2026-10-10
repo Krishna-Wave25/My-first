@@ -1,0 +1,53 @@
+name: LIFE OS AI — test & Android build
+
+on:
+  push:
+    paths: ["life-os/**", ".github/workflows/life-os.yml"]
+  pull_request:
+    paths: ["life-os/**", ".github/workflows/life-os.yml"]
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: life-os
+
+jobs:
+  web-tests:
+    name: Type-check, unit & browser tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: life-os/package-lock.json }
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - run: npm run e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with: { name: playwright-traces, path: life-os/test-results, retention-days: 7 }
+
+  android-apk:
+    name: Build debug APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: life-os/package-lock.json }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - uses: gradle/actions/setup-gradle@v4
+      - run: npm ci
+      - run: npm run build
+      - run: npx cap sync android
+      - name: Assemble debug APK
+        working-directory: life-os/android
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+      - name: Show APK
+        run: ls -la android/app/build/outputs/apk/debug/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: life-os-ai-debug-apk
+          path: life-os/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

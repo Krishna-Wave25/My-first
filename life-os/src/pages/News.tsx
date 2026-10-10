@@ -58,7 +58,7 @@ export function StoryCard({ a, rank }: { a: Article; rank?: number }) {
       ) : (
         <div className="row">
           <Btn sm disabled={!aiReady(s) || job.busy} onClick={() => job.run(async () => { const r = await analyzeArticle(s, a); await db.articles.update(a.id, { analysis: r }); })}>{job.busy ? "Analysing…" : tech ? "✨ Explain this development" : "✨ Why it matters"}</Btn>
-          {!aiReady(s) && <span className="tiny muted">Add an AI key in Settings to generate analysis. Without it only the source text is shown — nothing is invented.</span>}
+          {!aiReady(s) && <span className="tiny muted">Needs an AI key (Settings)</span>}
         </div>
       )}
       {job.error && <Notice kind="danger">{job.error}</Notice>}
@@ -122,6 +122,7 @@ function Briefing() {
     <div className="col">
       <div className="row"><RefreshBar section="news" onDone={(r) => { setReports(r); setVersion((v) => v + 1); }} />
         <div className="sp" /><Chip>⏰ Next briefing {format(next, "EEE h:mm a")} ({s.timezone})</Chip></div>
+      {!aiReady(s) && <Notice kind="info">Without an AI key, stories show only the source's own text — no analysis is generated and nothing is invented. Add a key in Settings → AI for “why it matters” and relevance notes.</Notice>}
       {failed.length > 0 && <Notice kind="warn">{failed.length} of {reports!.length} sources failed ({failed.slice(0, 3).map((f) => `${f.name}: ${f.error}`).join("; ")}{failed.length > 3 ? "…" : ""}). See Sources for details.</Notice>}
       {loading ? <Spinner label="Building your briefing…" /> : liveArts.length === 0 ? (
         <Empty icon="📭" title="No fresh verified stories available" action={<Btn kind="primary" onClick={() => setVersion((v) => v + 1)}>Try again</Btn>}>

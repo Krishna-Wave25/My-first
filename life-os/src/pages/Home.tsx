@@ -45,7 +45,7 @@ export default function Home() {
       </div>
       {!s.name && <div style={{ marginBottom: 14 }}><Notice kind="info">Welcome! Add your name in <Link to="/settings">Settings</Link>, then try the quick-add box below — type something like “Friday 5pm submit lab record high priority”.</Notice></div>}
       <Card className="flat"><QuickAdd /></Card>
-      {overdue > 0 && <div style={{ marginTop: 14 }}><Notice kind="warn">{overdue} overdue task{overdue > 1 ? "s" : ""} need attention — <Link to="/day?tab=overdue">review</Link></Notice></div>}
+      {overdue > 0 && <div style={{ marginTop: 14 }}><Notice kind="warn">{overdue} overdue task{overdue > 1 ? "s need" : " needs"} attention — <Link to="/day?tab=overdue">review</Link></Notice></div>}
       {edit && (
         <Card title="Customize dashboard" className="flat">
           <p className="small muted" style={{ marginBottom: 8 }}>Show, hide and reorder sections. Changes save automatically.</p>
@@ -58,7 +58,7 @@ export default function Home() {
           ))}
         </Card>
       )}
-      <div className="grid auto" style={{ marginTop: 14, gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 340px), 1fr))" }}>
+      <div className="grid auto" style={{ marginTop: 14, alignItems: "start", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 340px), 1fr))" }}>
         {visible.map((w) => <Widget key={w} id={w} tasks={tasks} habits={habits} logs={logs} score={score} />)}
       </div>
       {visible.length === 0 && <Empty icon="🧩" title="All sections hidden" action={<Btn onClick={() => setEdit(true)}>Customize</Btn>} />}

@@ -232,7 +232,7 @@ test.describe("news pipeline (fixture feeds)", () => {
     await expect(page.getByText(/sources failed/)).toBeVisible();
     // without an AI key we never show invented analysis
     await expect(page.getByText("AI analysis ·")).toHaveCount(0);
-    await expect(page.getByText(/Add an AI key in Settings/).first()).toBeVisible();
+    await expect(page.getByText(/Without an AI key, stories show only the source/)).toBeVisible();
 
     // sources tab shows per-feed health
     await page.getByRole("tab", { name: "Sources" }).click();
