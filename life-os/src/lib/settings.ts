@@ -78,13 +78,21 @@ export async function loadSettings(): Promise<Settings> {
   return s;
 }
 
-export async function saveSettings(patch: Partial<Settings>) {
-  const cur = await loadSettings();
-  const next = { ...cur, ...patch };
-  await setKV("settings", next);
-  try { localStorage.setItem("lifeos-theme", next.theme); } catch { /* storage unavailable */ }
-  document.documentElement.setAttribute("data-theme", next.theme);
-  return next;
+let saveQueue: Promise<unknown> = Promise.resolve();
+
+/** Serialised read-merge-write so two quick edits (e.g. name then time) can never overwrite each other. */
+export function saveSettings(patch: Partial<Settings>): Promise<Settings> {
+  const run = async () => {
+    const cur = await loadSettings();
+    const next = { ...cur, ...patch };
+    await setKV("settings", next);
+    try { localStorage.setItem("lifeos-theme", next.theme); } catch { /* storage unavailable */ }
+    document.documentElement.setAttribute("data-theme", next.theme);
+    return next;
+  };
+  const p = saveQueue.then(run, run);
+  saveQueue = p.catch(() => undefined);
+  return p;
 }
 
 /** Live settings; returns defaults until the DB responds. */

@@ -434,6 +434,8 @@ test.describe("assistant, settings, lock", () => {
     await page.goto("/#/settings");
     await page.getByLabel("Your name").fill("Krishna");
     await page.getByLabel("Daily briefing time").fill("06:45");
+    // wait until both values are actually persisted before reloading
+    await expect.poll(() => page.evaluate(async () => new Promise<string>((res) => { const r = indexedDB.open("lifeos"); r.onsuccess = () => { const q = r.result.transaction("kv").objectStore("kv").get("settings"); q.onsuccess = () => res(`${q.result?.value?.name}|${q.result?.value?.briefingTime}`); }; }))).toBe("Krishna|06:45");
     await page.reload();
     await expect(page.getByLabel("Your name")).toHaveValue("Krishna");
     await expect(page.getByLabel("Daily briefing time")).toHaveValue("06:45");
@@ -441,7 +443,7 @@ test.describe("assistant, settings, lock", () => {
     await expect(page.getByText("Not built").or(page.getByText("not built")).first()).toBeVisible();
     await expect(page.getByText(/Cloud accounts, multi-device sync/)).toBeVisible();
     await page.getByLabel("Anthropic API key").fill("sk-ant-test-123456789");
-    await page.getByLabel("Your name").click();
+    await expect.poll(() => page.evaluate(async () => new Promise<string>((res) => { const r = indexedDB.open("lifeos"); r.onsuccess = () => { const q = r.result.transaction("kv").objectStore("kv").get("settings"); q.onsuccess = () => res(q.result?.value?.ai?.apiKey ?? ""); }; }))).toBe("sk-ant-test-123456789");
     await page.reload();
     await expect(page.getByLabel("Anthropic API key")).toHaveValue("sk-ant-test-123456789");
     // key is not part of default export

@@ -25,7 +25,7 @@ Stack: React 18 · TypeScript · Vite · Dexie (IndexedDB) · chrono-node (date 
 cd life-os
 npm install
 npm run dev            # http://localhost:5173
-npm test               # 43 unit tests (vitest)
+npm test               # 44 unit tests (vitest)
 npm run e2e            # 26 browser tests incl. axe accessibility scans (Playwright)
 npm run build          # type-check + production build into dist/
 ```
@@ -111,7 +111,7 @@ Legend: ✅ working & tested · 🟡 working, limited · ❌ not built
 
 ## Known limitations & honest caveats
 
-1. **Not run on a real device or emulator.** The Android SDK could not be downloaded in the dev environment. The web app is tested in Chromium; the APK is built by CI (see the workflow run for status). Notification delivery, the native HTTP path, the back button, and OEM battery-optimisation behaviour are **untested**. Use *Settings → Send test notification* on your phone first.
+1. **Not run on a real device or emulator.** The Android SDK could not be downloaded in the dev environment. The web app is tested in Chromium; CI (GitHub Actions) builds the debug APK successfully (artifact `life-os-ai-debug-apk`), but the APK has never been launched. Notification delivery, the native HTTP path, the back button, and OEM battery-optimisation behaviour are **untested**. Use *Settings → Send test notification* on your phone first.
 2. **News feeds are unverified against live publishers.** The feed URLs are public RSS endpoints from memory and the sandbox blocked all publisher domains. Each feed's health is shown in News → Sources; broken feeds can be edited/replaced in-app. In a desktop browser many sites block direct requests (CORS) — the Android app fetches natively.
 3. **AI was only tested against a mocked API**, not a live key. Request format follows the Messages API; use *Settings → Test connection*.
 4. **Security model:** the PIN locks the UI; the on-device database is **not encrypted** (Android app sandboxing + device encryption apply; `allowBackup` is disabled). An API key stored in an app can be extracted from a rooted device — use a spend-limited key. There is no multi-user isolation because there is only one user.
@@ -122,7 +122,7 @@ Legend: ✅ working & tested · 🟡 working, limited · ❌ not built
 
 ## Testing
 
-* `npm test` — 43 unit tests: NL parsing, recurrence, planner, time zones, scoring, RSS/Atom/RDF parsing, ranking/dedupe/clickbait, fixture-network refresh, assistant confirmation gate (mock API), notification plan, ATS, wiring safety, finance maths, backup, PIN.
+* `npm test` — 44 unit tests: NL parsing, recurrence, planner, time zones, scoring, RSS/Atom/RDF parsing, ranking/dedupe/clickbait, fixture-network refresh, assistant confirmation gate (mock API), notification plan, ATS, wiring safety, finance maths, backup, PIN.
 * `npm run e2e` — 26 Playwright tests: all 11 sections, desktop/tablet/phone layouts (no horizontal overflow), persistence after reload, tasks/recurrence/review/notes/habits, five-story briefing from fixture feeds, honest empty/failed states, tracker, finance, career, projects & safety flags, YouTube, assistant confirmation, settings/export (API key excluded), PIN lock, axe scans (dark + light).
 
 ## Roadmap (to reach the original brief)

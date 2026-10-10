@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { db } from "../src/db/db";
 import { httpImpl } from "../src/lib/http";
-import { defaultSettings } from "../src/lib/settings";
+import { defaultSettings, loadSettings, saveSettings } from "../src/lib/settings";
 import { applyLocalActions, localAssistant, resumeAiTurn, runAiTurn } from "../src/lib/assistant";
 import { addTask } from "../src/lib/tasks";
 import { planNotifications } from "../src/lib/notifications";
@@ -155,6 +155,14 @@ describe("finance maths", () => {
     const s = monthSummary([{ type: "income", amount: 10000, category: "Stipend" }, { type: "expense", amount: 4000, category: "Rent/Hostel" }, { type: "expense", amount: 1000, category: "Shopping" }]);
     expect(s).toMatchObject({ income: 10000, spent: 5000, net: 5000 });
     expect(s.by).toEqual({ needs: 4000, wants: 1000, savings: 0 });
+  });
+});
+
+describe("settings", () => {
+  it("does not lose updates when saved back-to-back", async () => {
+    await Promise.all([saveSettings({ name: "Krishna" }), saveSettings({ briefingTime: "06:45" }), saveSettings({ workStart: "08:00" })]);
+    const s = await loadSettings();
+    expect([s.name, s.briefingTime, s.workStart]).toEqual(["Krishna", "06:45", "08:00"]);
   });
 });
 
