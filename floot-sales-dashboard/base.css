@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Overlay layers */
+  --z-overlay: 400;
+
+  --z-spotlight: 1000; /* Tutorial spotlights/guided help */
+
+  /* System layers */
+  --z-critical: 2000; /* Critical system notifications */
+
+  /* spacing */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+}
+
+:root {
+  --background: #f6f2ea;
+  --foreground: #1c2230;
+  --surface: #efe9dd;
+  --surface-foreground: #1c2230;
+  --sidebar: #ece5d7;
+  --sidebar-foreground: #1c2230;
+  --card: #fbf8f2;
+  --card-foreground: #1c2230;
+  --popup: #fbf8f2;
+  --popup-foreground: #1c2230;
+
+  --primary: #c2552f;
+  --primary-foreground: #fffaf4;
+  --secondary: #e6dfd1;
+  --secondary-foreground: #2a3142;
+  --accent: #f3e2d6;
+  --accent-foreground: #8f3b1d;
+  --muted: #ebe5d9;
+  --muted-foreground: #6b6f7a;
+
+  --success: #2f7a52;
+  --success-foreground: #f4fbf7;
+  --error: #b3363a;
+  --error-foreground: #fff6f6;
+  --warning: #b07a1a;
+  --warning-foreground: #fffaf0;
+  --info: #2f5d8a;
+  --info-foreground: #f4f8fc;
+  --info-hover: #284f76;
+  --info-active: #214263;
+
+  --border: #ddd5c6;
+
+  --font-family-base: 'Inter Tight', system-ui, sans-serif;
+  --font-family-display: 'Fraunces', Georgia, serif;
+  --font-family-monospace: 'JetBrains Mono', ui-monospace, monospace;
+  --font-family-cursive: 'Fraunces', Georgia, serif;
+
+  --shadow: 0 1px 2px rgba(28, 34, 48, 0.05);
+  --shadow-md: 0 4px 12px rgba(28, 34, 48, 0.07);
+  --shadow-lg: 0 12px 32px rgba(28, 34, 48, 0.12);
+  --shadow-focus: 0 0 0 3px rgba(194, 85, 47, 0.25);
+
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-full: 9999px;
+
+  --animation-duration-fast: 120ms;
+  --animation-duration-normal: 200ms;
+  --animation-duration-slow: 350ms;
+
+  --chart-color-1: #c2552f;
+  --chart-color-2: #2a3142;
+  --chart-color-3: #8a8f99;
+  --chart-color-4: #d9a383;
+  --chart-color-5: #4f6b5c;
+}
+
+.dark {
+  --background: #14171e;
+  --foreground: #ece6da;
+  --surface: #1b1f28;
+  --surface-foreground: #ece6da;
+  --sidebar: #171a22;
+  --sidebar-foreground: #ece6da;
+  --card: #1d212b;
+  --card-foreground: #ece6da;
+  --popup: #222733;
+  --popup-foreground: #ece6da;
+
+  --primary: #e0703f;
+  --primary-foreground: #1a1310;
+  --secondary: #272c38;
+  --secondary-foreground: #ddd6c9;
+  --accent: #3a2820;
+  --accent-foreground: #f0a07a;
+  --muted: #232833;
+  --muted-foreground: #959aa5;
+
+  --success: #4fae7d;
+  --success-foreground: #0f1a14;
+  --error: #e0605f;
+  --error-foreground: #1d0f0f;
+  --warning: #d9a440;
+  --warning-foreground: #1c160a;
+  --info: #6c9bd0;
+  --info-foreground: #0e1520;
+  --info-hover: #82acdb;
+  --info-active: #97bce4;
+
+  --border: #2e3340;
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --shadow-focus: 0 0 0 3px rgba(224, 112, 63, 0.35);
+
+  --chart-color-1: #e0703f;
+  --chart-color-2: #c9c2b5;
+  --chart-color-3: #6f7480;
+  --chart-color-4: #9a5c40;
+  --chart-color-5: #7fa58f;
+}
