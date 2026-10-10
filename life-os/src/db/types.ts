@@ -145,6 +145,8 @@ export interface TrackedOpportunity {
   notes: string;
   amount: number | null; // earned so far, INR (revenue)
   playbookId: string | null;
+  /** Verification record for jobs/internships/scholarships — filled in by the user from the official page. */
+  meta?: { eligibility: string; location: string; stipend: string; verified: boolean };
   createdAt: string;
   updatedAt: string;
 }

@@ -36,10 +36,14 @@ export const DEFAULT_WIDGETS = [
   "youtube", "project", "habits", "score", "notes", "assistant",
 ];
 
+/** The theme the pre-paint script in index.html already applied (OS preference on first run). */
+const activeTheme = (): "dark" | "light" =>
+  typeof document !== "undefined" && document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+
 export const defaultSettings = (): Settings => ({
   name: "",
   timezone: localTimeZone(),
-  theme: "dark",
+  theme: activeTheme(),
   workStart: "09:00",
   workEnd: "21:00",
   briefingTime: "07:00",
