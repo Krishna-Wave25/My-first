@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { ActivityIndicator, Alert, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, Text, TextInput, View, StyleSheet } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { UNIVERSE, INDEX_DEFS } from "../data/stocks";
-import { market, Detail, Range, RANGES } from "../data/market";
+import { market, Detail, Range, RANGES, Result } from "../data/market";
 import { useApp } from "../state";
 import { colors, inr, inr0, pct, radius } from "../theme";
 import { Button, Card, Chip, DataBadge, Disclaimer, Stat } from "../components/ui";
@@ -14,7 +14,8 @@ export default function StockScreen() {
   const def = [...UNIVERSE, ...INDEX_DEFS].find((d) => d.symbol === params.symbol)!;
   const { watch, toggleWatch, portfolio, trade, prices } = useApp();
   const [range, setRange] = useState<Range>("1M");
-  const [d, setD] = useState<Detail | null>(null);
+  const [res, setRes] = useState<Result<Detail> | null>(null);
+  const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(false);
   const [order, setOrder] = useState<null | "BUY" | "SELL">(null);
   const [qty, setQty] = useState("1");
@@ -34,15 +35,17 @@ export default function StockScreen() {
 
   useEffect(() => {
     let live = true;
-    setErr(false);
-    market.getDetail(def, range).then((r) => live && setD(r)).catch(() => live && setErr(true));
+    setErr(false); setLoading(true); // never show the previous range's chart/percentage under the new range chip
+    market.getDetail(def, range).then((r) => live && setRes(r)).catch(() => live && setErr(true)).finally(() => live && setLoading(false));
     return () => { live = false; };
   }, [def, range]);
 
-  if (!d) return <View style={s.center}>{err ? <Text style={{ color: colors.muted }}>Could not load data.</Text> : <ActivityIndicator color={colors.accent} />}</View>;
+  if (!res) return <View style={s.center}>{err ? <Text style={{ color: colors.muted }}>Could not load data. Check your internet and go back to retry.</Text> : <ActivityIndicator color={colors.accent} />}</View>;
+  const d = res.data, status = res.status;
   const q = d.quote, up = q.changePct >= 0, rUp = d.rangeChangePct >= 0;
+  const canTrade = status === "live"; // practice orders only at real (delayed) prices, never at demo numbers
   const held = portfolio.holdings[def.symbol];
-  const price = prices[def.symbol] ?? q.price;
+  const price = q.price;
   const n = parseInt(qty || "0", 10) || 0;
 
   const place = () => {
@@ -60,10 +63,12 @@ export default function StockScreen() {
         <Text style={{ color: up ? colors.up : colors.down, fontWeight: "600" }}>
           {q.prevClose ? `${up ? "+" : ""}${(q.price - q.prevClose).toFixed(2)}  ` : ""}({pct(q.changePct)}) today
         </Text>
-        <DataBadge sample={market.isSample} />
+        <DataBadge status={status} />
 
-        <View style={{ marginTop: 10 }}><Chart data={d.series} up={rUp} /></View>
-        <Text style={{ color: rUp ? colors.up : colors.down, textAlign: "center", marginTop: 6, fontWeight: "600" }}>{pct(d.rangeChangePct)} over {range}</Text>
+        <View style={{ marginTop: 10, height: 170, justifyContent: "center" }}>
+          {loading ? <ActivityIndicator color={colors.accent} /> : err ? <Text style={{ color: colors.muted, textAlign: "center" }}>Could not load this range.</Text> : <Chart data={d.series} up={rUp} />}
+        </View>
+        <Text style={{ color: rUp ? colors.up : colors.down, textAlign: "center", marginTop: 6, fontWeight: "600" }}>{loading || err ? " " : `${pct(d.rangeChangePct)} over ${range}`}</Text>
         <View style={s.ranges}>{RANGES.map((r) => <Chip key={r} label={r} on={r === range} onPress={() => setRange(r)} />)}</View>
 
         <Text style={s.section}>Stats</Text>
@@ -87,14 +92,15 @@ export default function StockScreen() {
             </Card>
           </>
         )}
+        {!isIndex && !canTrade && <Text style={{ color: colors.warn, fontSize: 12, marginTop: 8 }}>Practice orders are paused while demo numbers are shown, so your practice portfolio never mixes fake and real prices.</Text>}
         <Disclaimer />
       </ScrollView>
 
       {!isIndex && (
         <View style={s.bar}>
-          <Button label="BUY (practice)" onPress={() => setOrder("BUY")} />
+          <Button label="BUY (practice)" disabled={!canTrade} onPress={() => setOrder("BUY")} />
           <View style={{ width: 10 }} />
-          <Button label="SELL" kind="danger" disabled={!held} onPress={() => setOrder("SELL")} />
+          <Button label="SELL" kind="danger" disabled={!held || !canTrade} onPress={() => setOrder("SELL")} />
         </View>
       )}
 

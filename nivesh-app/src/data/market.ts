@@ -10,11 +10,15 @@ export type Range = "1D" | "1W" | "1M" | "3M" | "1Y" | "5Y";
 export const RANGES: Range[] = ["1D", "1W", "1M", "3M", "1Y", "5Y"];
 export type Detail = { quote: Quote; series: number[]; rangeChangePct: number };
 
+// Every call reports where ITS data came from, so the UI can never label sample numbers as live.
+import type { Result, Status } from "./status";
+export type { Result, Status };
+export { worstStatus } from "./status";
 export interface MarketProvider {
-  isSample: boolean;
-  getIndices(): Promise<Quote[]>;
-  getStocks(): Promise<Quote[]>;
-  getDetail(def: Pick<StockDef, "symbol" | "yahoo" | "name" | "sector">, range: Range): Promise<Detail>;
+  getIndices(): Promise<Result<Quote[]>>;
+  getStocks(): Promise<Result<Quote[]>>;
+  getDetail(def: Pick<StockDef, "symbol" | "yahoo" | "name" | "sector">, range: Range): Promise<Result<Detail>>;
+  clearCache(): void;
 }
 
 // ---- sample data (deterministic pseudo-random walk) ----
@@ -36,15 +40,15 @@ export const sampleQuote = (d: Pick<StockDef, "symbol" | "name" | "sector" | "sa
 
 const sampleList = <T extends { sample: number }>(defs: T[]) => defs.map((d) => sampleQuote(d as any));
 export const MockProvider: MarketProvider = {
-  isSample: true,
-  getIndices: async () => sampleList(INDEX_DEFS),
-  getStocks: async () => sampleList(UNIVERSE),
+  clearCache: () => {},
+  getIndices: async () => ({ data: sampleList(INDEX_DEFS), status: "sample" }),
+  getStocks: async () => ({ data: sampleList(UNIVERSE), status: "sample" }),
   getDetail: async (def, range) => {
     const all = [...UNIVERSE, ...INDEX_DEFS];
     const d = all.find((x) => x.symbol === def.symbol) ?? { ...def, sample: 1000, sampleChg: 0 };
     const quote = sampleQuote(d as any);
     const series = walk(quote.price, (range === "1D" ? 0.0002 : d.sampleChg / 300) * (range === "5Y" ? 8 : 1), POINTS[range], def.symbol + range);
-    return { quote, series, rangeChangePct: ((series[series.length - 1] - series[0]) / series[0]) * 100 };
+    return { data: { quote, series, rangeChangePct: ((series[series.length - 1] - series[0]) / series[0]) * 100 }, status: "sample" };
   },
 };
 

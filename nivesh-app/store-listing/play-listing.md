@@ -11,7 +11,7 @@ Nivesh helps beginners understand the stock market before risking real money.
 • Stock pages – price charts for 1D to 5Y, day and 52-week range, watchlist
 • Practice mode – buy and sell with ₹1,00,000 of virtual money and see how you would have done
 • SIP calculator – see how compounding works at the return rate you choose
-• Where to invest – plain-language options for ₹100 to crores, with risk labels
+• Investing basics – learn what kinds of options exist for small and large amounts, with risk labels (education, not advice)
 • AI explainer – ask "What is a SIP?" or "What does P/E mean?" and get simple answers
 • Screener – filter stocks by sector and daily move
 
@@ -22,7 +22,7 @@ Important: Nivesh is for education only. It does not place real trades, is not a
 ## Assets (already generated in `assets/`)
 - App icon 512×512: `play-store-icon-512.png`
 - Feature graphic 1024×500: `play-feature-graphic-1024x500.png`
-- Phone screenshots (min 2, 16:9 or 9:16): take from the installed app (Stocks, Stock detail, Practice, Where to invest)
+- Phone screenshots (min 2, 16:9 or 9:16): take from the installed app (Stocks, Stock detail, Practice, Investing basics)
 
 ## Play Console declarations (answer truthfully; review before submitting)
 - **App access:** all features available; trial then subscription (no login). Provide the internal-test instructions if asked.

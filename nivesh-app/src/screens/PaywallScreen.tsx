@@ -14,7 +14,7 @@ export default function PaywallScreen({ plans, connected, busy, message, onBuy, 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.bg }} contentContainerStyle={{ padding: 20, paddingTop: 60 }}>
       <H>Your {TRIAL_DAYS}-day free trial has ended</H>
-      <Text style={s.p}>Subscribe to keep using live market views, the screener, practice trading, the AI explainer and investing lessons.</Text>
+      <Text style={s.p}>Subscribe to keep using delayed market data, the screener, practice trading, the AI explainer and investing lessons.</Text>
 
       {!connected && <ActivityIndicator color={colors.accent} style={{ marginTop: 16 }} />}
       {connected && plans.length === 0 && (

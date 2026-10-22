@@ -30,7 +30,7 @@ function Tabs({ trialLabel }: { trialLabel: string }) {
       <Tab.Screen name="Stocks" component={HomeScreen} options={{ tabBarIcon: icon("📈"), headerTitle: trialLabel }} />
       <Tab.Screen name="Watchlist" component={WatchlistScreen} options={{ tabBarIcon: icon("★") }} />
       <Tab.Screen name="Practice" component={PracticeScreen} options={{ tabBarIcon: icon("🎯") }} />
-      <Tab.Screen name="Invest" component={InvestScreen} options={{ tabBarIcon: icon("₹"), title: "Where to invest" }} />
+      <Tab.Screen name="Invest" component={InvestScreen} options={{ tabBarIcon: icon("₹"), title: "Investing basics" }} />
       <Tab.Screen name="Learn" component={LearnScreen} options={{ tabBarIcon: icon("📘") }} />
     </Tab.Navigator>
   );

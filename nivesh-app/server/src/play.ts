@@ -4,7 +4,8 @@ import { createSign } from "node:crypto";
 // No extra dependencies: the service-account JWT is signed with node:crypto.
 
 export type ServiceAccount = { client_email: string; private_key: string; token_uri?: string };
-export type Entitlement = { active: boolean; state: string; expiresAt: number | null; productId: string | null };
+// definitive=false means Google could not tell us the state (bad token / misconfig): callers must NOT revoke access on it.
+export type Entitlement = { active: boolean; state: string; expiresAt: number | null; productId: string | null; definitive: boolean };
 
 const b64url = (b: Buffer | string) => Buffer.from(b).toString("base64url");
 
@@ -25,11 +26,11 @@ const ACTIVE_STATES = new Set(["SUBSCRIPTION_STATE_ACTIVE", "SUBSCRIPTION_STATE_
 export function evaluateSubscription(resp: any, expectedProductId: string, now = Date.now()): Entitlement {
   const state: string = resp?.subscriptionState ?? "UNKNOWN";
   const item = (resp?.lineItems ?? []).find((l: any) => l?.productId === expectedProductId);
-  if (!item) return { active: false, state, expiresAt: null, productId: null };
+  if (!item) return { active: false, state, expiresAt: null, productId: null, definitive: true };
   const expiresAt = item.expiryTime ? Date.parse(item.expiryTime) : null;
   // A cancelled-but-not-yet-expired subscription (state CANCELED) keeps access until expiry.
   const stillPaid = (ACTIVE_STATES.has(state) || state === "SUBSCRIPTION_STATE_CANCELED") && expiresAt !== null && expiresAt > now;
-  return { active: stillPaid, state, expiresAt, productId: item.productId };
+  return { active: stillPaid, state, expiresAt, productId: item.productId, definitive: true };
 }
 
 export function makePlayVerifier(opts: {
@@ -43,7 +44,7 @@ export function makePlayVerifier(opts: {
   async function accessToken(): Promise<string> {
     if (cached && cached.exp > now() + 60_000) return cached.token;
     const res = await f(opts.sa.token_uri ?? "https://oauth2.googleapis.com/token", {
-      method: "POST",
+      method: "POST", signal: AbortSignal.timeout(8000),
       headers: { "content-type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
         grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
@@ -58,8 +59,9 @@ export function makePlayVerifier(opts: {
 
   return async function verify(purchaseToken: string): Promise<Entitlement> {
     const url = `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${encodeURIComponent(opts.packageName)}/purchases/subscriptionsv2/tokens/${encodeURIComponent(purchaseToken)}`;
-    const res = await f(url, { headers: { authorization: `Bearer ${await accessToken()}` } });
-    if (res.status === 404 || res.status === 400 || res.status === 410) return { active: false, state: "INVALID_TOKEN", expiresAt: null, productId: null };
+    const res = await f(url, { headers: { authorization: `Bearer ${await accessToken()}` }, signal: AbortSignal.timeout(8000) });
+    // 400/404/410 can mean a bad token OR a misconfigured package name, so this is NOT a definitive "inactive".
+    if (res.status === 404 || res.status === 400 || res.status === 410) return { active: false, state: "INVALID_TOKEN", expiresAt: null, productId: null, definitive: false };
     if (!res.ok) throw new Error(`Play API error (${res.status})`);
     return evaluateSubscription(await res.json(), opts.productId, now());
   };

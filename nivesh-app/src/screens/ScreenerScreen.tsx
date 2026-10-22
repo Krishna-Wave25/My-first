@@ -6,7 +6,7 @@ import { Card, Chip, DataBadge, Disclaimer, H } from "../components/ui";
 import { StockRow } from "../components/StockRow";
 
 export default function ScreenerScreen() {
-  const { stocks, sample } = useApp();
+  const { stocks, status } = useApp();
   const [sector, setSector] = useState<string>("All");
   const [dir, setDir] = useState<"any" | "up" | "down">("any");
   const sectors = useMemo(() => ["All", ...new Set(stocks.map((s) => s.sector))], [stocks]);
@@ -16,7 +16,7 @@ export default function ScreenerScreen() {
   );
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.bg }} contentContainerStyle={{ padding: 16 }}>
-      <DataBadge sample={sample} />
+      <DataBadge status={status} />
       <H>Filter</H>
       <View style={s.wrap}>{sectors.map((x) => <Chip key={x} label={x} on={sector === x} onPress={() => setSector(x)} />)}</View>
       <View style={s.wrap}>

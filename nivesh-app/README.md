@@ -38,9 +38,22 @@ EXPO_PUBLIC_APP_KEY=<same APP_KEY>
 Deploy `server/` to any Node host (Render, Railway, Fly.io, Cloud Run). Model defaults to `claude-opus-5-5`
 (`CLAUDE_MODEL=claude-haiku-5-5` is much cheaper per question). Monitor spend in the Anthropic Console.
 
+### Server settings and abuse/cost protection
+The app key inside the APK is public, so cost is capped on the server: free-trial users get 10 questions/day per install and share a
+pool of 500/day; verified subscribers get 80/day per purchase token; 60/hour per IP; 3000/day overall (see `server/src/policy.ts`, adjust to taste).
+Env vars: `ANTHROPIC_API_KEY`, `APP_KEY`, `TRUST_PROXY=1` (only behind exactly one reverse proxy such as Render/Fly), `HISTORY_SECRET`
+(stable random string, so chat history survives restarts), optional `CLAUDE_MODEL` (default `claude-opus-5-5`; `claude-haiku-5-5` is far cheaper per answer
+and plenty for explaining concepts), plus the Google Play vars in `PLAY_BILLING_SETUP.md`.
+
+### Known limitations
+- The 7-day trial is stored on the phone, so clearing app data or reinstalling restarts it. For a hard trial, use the Play free-trial offer only
+  (the entitlement then comes from Google and survives reinstalls) or track trials on the server.
+- A valid Play purchase token is a bearer credential; the server rate-limits per token but cannot tell who is holding it.
+- Data shown as SAMPLE disables practice orders so demo numbers never mix with real prices.
+
 ## What works now
 Market overview (indices, gainers/losers, sector trends), watchlist, screener (sector / direction filters),
-"Where can I invest?" by amount (education only), lessons, 7-day trial and paywall (test mode).
+"Investing basics" by amount (education only, no specific products), lessons, 7-day trial and Google Play paywall.
 
 ## Before public launch (not done yet)
 - Replace the Yahoo Finance provider (`src/data/yahoo.ts`) with a licensed delayed/EOD data vendor or broker API. Yahoo's public endpoint is unofficial and not licensed for a paid app; it is for development/testing only.

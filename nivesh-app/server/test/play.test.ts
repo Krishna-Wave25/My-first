@@ -39,7 +39,9 @@ test("verifier exchanges token once, calls the right URL, maps 404 to invalid", 
   }) as any;
   const verify = makePlayVerifier({ sa: { client_email: "a@b", private_key: privateKey.export({ type: "pkcs8", format: "pem" }) as string }, packageName: "com.nivesh.app", productId: "nivesh_pro", fetchImpl: f, now: () => NOW });
   assert.equal((await verify("GOOD_TOKEN_12345")).active, true);
-  assert.equal((await verify("BAD_TOKEN_123456")).state, "INVALID_TOKEN");
+  const bad = await verify("BAD_TOKEN_123456");
+  assert.equal(bad.state, "INVALID_TOKEN"); assert.equal(bad.definitive, false, "a 404 must never revoke access");
+  assert.equal((await verify("GOOD_TOKEN_12345")).definitive, true);
   assert.equal(calls.filter((u) => u.includes("oauth2")).length, 1, "access token is cached");
   assert.ok(calls.some((u) => u.includes("/applications/com.nivesh.app/purchases/subscriptionsv2/tokens/GOOD_TOKEN_12345")));
 });

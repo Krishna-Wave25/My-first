@@ -11,9 +11,11 @@ export const H = ({ children, right }: { children: React.ReactNode; right?: Reac
 );
 export const Disclaimer = () => <Text style={s.disc}>{DISCLAIMER}</Text>;
 
-export const DataBadge = ({ sample }: { sample: boolean }) => (
-  <Text style={[s.badge, !sample && { color: colors.muted }]}>
-    {sample ? "SAMPLE DATA – live feed unavailable, showing demo numbers" : "Delayed data (about 15 min). For information only."}
+export const DataBadge = ({ status }: { status: "live" | "sample" | "partial" }) => (
+  <Text style={[s.badge, status === "live" && { color: colors.muted }]}>
+    {status === "sample" ? "SAMPLE DATA – live feed unavailable, these are demo numbers, not real prices"
+      : status === "partial" ? "Delayed data (about 15 min). Some stocks could not be loaded – pull down to retry."
+      : "Delayed data (about 15 min). For information only."}
   </Text>
 );
 

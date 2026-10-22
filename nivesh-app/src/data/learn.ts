@@ -3,11 +3,11 @@ export const DISCLAIMER =
 
 export type Bucket = { name: string; why: string; risk: "Low" | "Medium" | "High" };
 
-// Illustrative education only. Not a recommendation for any person.
-export const ideasForAmount = (amount: number): { band: string; buckets: Bucket[] } => {
+// General education about asset types. NOT a recommendation for any person (no specific products or stocks).
+export const basicsForAmount = (amount: number): { band: string; buckets: Bucket[] } => {
   if (amount < 5000)
     return {
-      band: "Starting small (under ₹5,000)",
+      band: "Small amounts (under ₹5,000)",
       buckets: [
         { name: "Index fund SIP (₹100+/month)", why: "Spreads money across many companies for a small monthly amount.", risk: "Medium" },
         { name: "Digital gold", why: "Tiny amounts, often used as a hedge against inflation.", risk: "Medium" },
@@ -16,20 +16,20 @@ export const ideasForAmount = (amount: number): { band: string; buckets: Bucket[
     };
   if (amount < 100000)
     return {
-      band: "Growing (₹5,000 – ₹1 lakh)",
+      band: "Medium amounts (₹5,000 – ₹1 lakh)",
       buckets: [
         { name: "Nifty 50 / index ETFs", why: "Low-cost way to own the broad market.", risk: "Medium" },
-        { name: "Large-cap stocks you understand", why: "Study the business, debt and growth before buying.", risk: "High" },
+        { name: "Shares of individual companies", why: "Higher risk and needs research into the business, its debt and its growth. Many learners start with index funds instead.", risk: "High" },
         { name: "PPF / bonds / fixed deposits", why: "Stable portion that cushions market falls.", risk: "Low" },
       ],
     };
   return {
-    band: "Larger sums (₹1 lakh and above)",
+    band: "Larger amounts (₹1 lakh and above)",
     buckets: [
       { name: "Diversified mix by goal and time horizon", why: "Split across equity, debt, gold and real assets instead of one bet.", risk: "Medium" },
       { name: "Debt funds / G-Secs", why: "Capital stability for money you need within a few years.", risk: "Low" },
       { name: "REITs / InvITs", why: "Exposure to real estate and infrastructure with smaller tickets.", risk: "Medium" },
-      { name: "Talk to a SEBI-registered adviser", why: "For crore-level portfolios, tax and risk planning matter a lot.", risk: "Low" },
+      { name: "Professional advice", why: "For large sums, tax and risk planning matter a lot. A SEBI-registered adviser can look at your whole situation; this app cannot.", risk: "Low" },
     ],
   };
 };

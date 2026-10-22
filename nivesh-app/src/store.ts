@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { emptyPortfolio, Portfolio } from "./portfolio";
+import { ALLOW_TEST_UNLOCK } from "./billing";
 
 const TRIAL_KEY = "nivesh.trialStart";
 const WATCH_KEY = "nivesh.watchlist";
@@ -18,7 +19,7 @@ export async function setEntitlement(e: Entitlement | null) {
 
 export async function getAccess(): Promise<{ paid: boolean; trialDaysLeft: number }> {
   try {
-    if ((await AsyncStorage.getItem(PAID_KEY)) === "1") return { paid: true, trialDaysLeft: 0 };
+    if (ALLOW_TEST_UNLOCK && (await AsyncStorage.getItem(PAID_KEY)) === "1") return { paid: true, trialDaysLeft: 0 }; // test builds only
     const ent = await getEntitlement();
     if (ent && ent.expiresAt > Date.now()) return { paid: true, trialDaysLeft: 0 };
     let start = await AsyncStorage.getItem(TRIAL_KEY);
@@ -29,12 +30,14 @@ export async function getAccess(): Promise<{ paid: boolean; trialDaysLeft: numbe
     const used = (Date.now() - Number(start)) / 86_400_000;
     return { paid: false, trialDaysLeft: Math.max(0, Math.ceil(TRIAL_DAYS - used)) };
   } catch {
-    return { paid: false, trialDaysLeft: TRIAL_DAYS };
+    // Storage unreadable: fail closed. (Failing open would hand out a fresh trial every time.) Paywall offers Restore.
+    return { paid: false, trialDaysLeft: 0 };
   }
 }
 
 // Test-only unlock for sideloaded APKs (see ALLOW_TEST_UNLOCK). Real access comes from Google Play entitlements.
 export async function unlockForTesting() {
+  if (!ALLOW_TEST_UNLOCK) return;
   await AsyncStorage.setItem(PAID_KEY, "1");
 }
 

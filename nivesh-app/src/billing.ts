@@ -34,7 +34,7 @@ export function pickPlans(offers: Offer[] | null | undefined): Plan[] {
 }
 
 // Server-side check with Google. Returns null when the server isn't configured/reachable (caller decides the fallback).
-export async function verifyWithServer(purchaseToken: string): Promise<{ active: boolean; expiresAt: number | null } | null> {
+export async function verifyWithServer(purchaseToken: string): Promise<{ active: boolean; expiresAt: number | null; definitive: boolean } | null> {
   if (!API) return null;
   try {
     const res = await fetch(`${API.replace(/\/$/, "")}/verify-subscription`, {
@@ -43,6 +43,7 @@ export async function verifyWithServer(purchaseToken: string): Promise<{ active:
     });
     if (!res.ok) return null;
     const j = await res.json();
-    return { active: !!j.active, expiresAt: typeof j.expiresAt === "number" ? j.expiresAt : null };
+    // definitive=false (bad token / server misconfig) must never be used to REVOKE access
+    return { active: !!j.active, expiresAt: typeof j.expiresAt === "number" ? j.expiresAt : null, definitive: j.definitive !== false };
   } catch { return null; }
 }

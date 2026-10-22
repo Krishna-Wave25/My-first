@@ -11,24 +11,24 @@ const TOOLS = [
   { t: "Screener", i: "🔎", go: "Screener" },
   { t: "SIP calculator", i: "🧮", go: "Sip" },
   { t: "Practice trading", i: "🎯", go: "Practice" },
-  { t: "Where to invest", i: "₹", go: "Invest" },
+  { t: "Investing basics", i: "₹", go: "Invest" },
   { t: "Learn / AI", i: "📘", go: "Learn" },
 ];
 
 export default function HomeScreen() {
   const nav = useNavigation<any>();
-  const { stocks, indices, loading, sample, refresh } = useApp();
+  const { stocks, indices, loading, status, refresh } = useApp();
   const [tab, setTab] = useState<"Gainers" | "Losers">("Gainers");
   const sorted = [...stocks].sort((a, b) => b.changePct - a.changePct);
   const movers = tab === "Gainers" ? sorted.slice(0, 5) : sorted.slice(-5).reverse();
   const sectors = sectorTrends(stocks);
 
   return (
-    <ScrollView style={s.page} contentContainerStyle={{ padding: 16 }} refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh} tintColor={colors.accent} />}>
+    <ScrollView style={s.page} contentContainerStyle={{ padding: 16 }} refreshControl={<RefreshControl refreshing={loading} onRefresh={() => refresh(true)} tintColor={colors.accent} />}>
       <Pressable style={s.search} onPress={() => nav.navigate("Search")} accessibilityRole="search">
         <Text style={{ color: colors.muted }}>🔍  Search stocks, e.g. Reliance, TCS</Text>
       </Pressable>
-      <DataBadge sample={sample} />
+      <DataBadge status={status} />
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 6 }}>
         {indices.map((i) => (

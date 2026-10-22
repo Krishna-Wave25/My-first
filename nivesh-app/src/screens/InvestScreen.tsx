@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, Text, TextInput, View, StyleSheet } from "react-native";
-import { ideasForAmount } from "../data/learn";
+import { basicsForAmount } from "../data/learn";
 import { colors, inr } from "../theme";
 import { Card, H, Disclaimer } from "../components/ui";
 
@@ -9,13 +9,13 @@ const riskColor = { Low: colors.up, Medium: colors.warn, High: colors.down } as 
 export default function InvestScreen() {
   const [text, setText] = useState("5000");
   const amount = Math.max(0, parseInt(text.replace(/[^0-9]/g, "") || "0", 10));
-  const { band, buckets } = ideasForAmount(amount);
+  const { band, buckets } = basicsForAmount(amount);
   return (
     <ScrollView style={s.page} contentContainerStyle={{ padding: 16 }} keyboardShouldPersistTaps="handled">
-      <H>Where can I invest?</H>
-      <Text style={s.muted}>Enter an amount, from a few rupees to crores, to see common options people learn about.</Text>
+      <H>Investing basics</H>
+      <Text style={s.muted}>Pick an amount to learn which kinds of options exist at that size and what the trade-offs are. This is general education, not a recommendation for you.</Text>
       <Card style={{ marginTop: 12 }}>
-        <Text style={s.muted}>Amount you have</Text>
+        <Text style={s.muted}>Amount (for learning)</Text>
         <TextInput
           value={text} onChangeText={setText} keyboardType="number-pad"
           style={s.input} placeholder="e.g. 5000" placeholderTextColor={colors.muted}

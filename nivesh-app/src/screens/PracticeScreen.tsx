@@ -9,7 +9,7 @@ import { Button, Card, DataBadge, Disclaimer, H } from "../components/ui";
 
 export default function PracticeScreen() {
   const nav = useNavigation<any>();
-  const { portfolio, prices, resetPortfolio, sample } = useApp();
+  const { portfolio, prices, resetPortfolio, status } = useApp();
   const v = valueOf(portfolio, prices);
   const rows = Object.entries(portfolio.holdings);
   const up = v.pnl >= 0;
@@ -17,7 +17,7 @@ export default function PracticeScreen() {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.bg }} contentContainerStyle={{ padding: 16 }}>
       <Text style={s.banner}>PRACTICE MODE · virtual {inr0(START_CASH)} · no real money, no real trades</Text>
-      <DataBadge sample={sample} />
+      <DataBadge status={status} />
       <Card style={{ marginTop: 6 }}>
         <Text style={s.muted}>Total value</Text>
         <Text style={s.big}>{inr(v.total)}</Text>

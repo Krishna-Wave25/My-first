@@ -22,8 +22,8 @@ export default function LearnScreen() {
     const history = chat;
     setChat([...history, { role: "user", content: question }]);
     try {
-      const answer = await askExplainer(question, history);
-      setChat((c) => [...c, { role: "assistant", content: answer }]);
+      const { answer, sig } = await askExplainer(question, history);
+      setChat((c) => [...c, { role: "assistant", content: answer, sig }]);
     } catch (e: any) {
       setErr(e?.message ?? "Something went wrong. Please try again.");
       setChat(history); setQ(question);
