@@ -44,7 +44,7 @@ Market overview (indices, gainers/losers, sector trends), watchlist, screener (s
 
 ## Before public launch (not done yet)
 - Replace the Yahoo Finance provider (`src/data/yahoo.ts`) with a licensed delayed/EOD data vendor or broker API. Yahoo's public endpoint is unofficial and not licensed for a paid app; it is for development/testing only.
-- Real payments via Google Play Billing + server-side verification (`src/store.ts` unlock is test-only).
+- Play Billing is implemented; finish the Play Console setup in `PLAY_BILLING_SETUP.md` and test with an internal-testing install.
 - Replace the shared `APP_KEY` with real entitlement checks (Google Play purchase verification) so only trial/paid users can use the AI explainer. A key bundled in the app can be extracted.
 - Host the server (see below) and set the app's `EXPO_PUBLIC_API_URL`.
 - Privacy policy, Play Store listing, final app name / trademark check, disclaimer review.

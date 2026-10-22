@@ -1,4 +1,4 @@
-name: Build Nivesh Android APK
+name: Build Nivesh Android
 
 on:
   workflow_dispatch:
@@ -7,9 +7,10 @@ on:
     paths: ["nivesh-app/**", ".github/workflows/build-android-apk.yml"]
 
 permissions:
-  contents: write   # to publish the APK as a GitHub Release
+  contents: write   # to publish the test APK as a GitHub Release
 
 jobs:
+  # 1) Test APK for sideloading on your own phone (debug-signed; has a "test unlock" button on the paywall).
   apk:
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -17,58 +18,107 @@ jobs:
       run:
         working-directory: nivesh-app
     env:
-      # Optional: set these in GitHub -> Settings -> Secrets and variables -> Actions
       EXPO_PUBLIC_API_URL: ${{ vars.NIVESH_API_URL }}
       EXPO_PUBLIC_APP_KEY: ${{ secrets.NIVESH_APP_KEY }}
+      EXPO_PUBLIC_ALLOW_TEST_UNLOCK: "1"
+      ANDROID_VERSION_CODE: ${{ github.run_number }}
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: nivesh-app/package-lock.json
-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
-
       - name: Accept Android SDK licenses (SDK is preinstalled on the runner)
         working-directory: .
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
-
-      - name: Install JS dependencies
-        run: npm ci
-
+      - run: npm ci
       - name: Typecheck
         run: npx tsc --noEmit
-
       - name: Generate native Android project
         run: npx expo prebuild --platform android --no-install
-
       - name: Build release APK
         working-directory: nivesh-app/android
         run: ./gradlew assembleRelease --no-daemon
-
-      - name: Name the APK
+      - name: Name the APK and check it has the Play Billing permission
         run: |
           mkdir -p out
           cp android/app/build/outputs/apk/release/*.apk out/Nivesh.apk
+          AAPT=$(ls "$ANDROID_HOME"/build-tools/*/aapt | sort -V | tail -1)
+          "$AAPT" dump permissions out/Nivesh.apk | tee /dev/stderr | grep -q "com.android.vending.BILLING"
           ls -lh out
-
       - uses: actions/upload-artifact@v4
         with:
           name: Nivesh-apk
           path: nivesh-app/out/Nivesh.apk
           retention-days: 30
-
       - name: Publish as a GitHub Release (easy download on your phone)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="nivesh-apk-${{ github.run_number }}"
-          gh release create "$TAG" out/Nivesh.apk \
+          gh release create "nivesh-apk-${{ github.run_number }}" out/Nivesh.apk \
             --repo "${{ github.repository }}" \
             --title "Nivesh APK build ${{ github.run_number }}" \
-            --notes "Android APK built from commit ${{ github.sha }}. Install on your phone (allow 'install unknown apps' for your browser). Uses sample data if the live feed is unreachable."
+            --notes "Test APK from commit ${{ github.sha }}. Sideload only: it uses a debug signing key and has a test-unlock button. Real purchases need the Play Store build."
+
+  # 2) Play Store bundle (.aab), signed with YOUR upload key. Runs only when the keystore secrets exist.
+  #    Test unlock is OFF here, so the paywall requires a real Google Play purchase.
+  aab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: nivesh-app
+    env:
+      EXPO_PUBLIC_API_URL: ${{ vars.NIVESH_API_URL }}
+      EXPO_PUBLIC_APP_KEY: ${{ secrets.NIVESH_APP_KEY }}
+      ANDROID_VERSION_CODE: ${{ github.run_number }}
+      KEYSTORE_B64: ${{ secrets.NIVESH_KEYSTORE_BASE64 }}
+      NIVESH_KEYSTORE_PASSWORD: ${{ secrets.NIVESH_KEYSTORE_PASSWORD }}
+      NIVESH_KEY_ALIAS: ${{ secrets.NIVESH_KEY_ALIAS }}
+      NIVESH_KEY_PASSWORD: ${{ secrets.NIVESH_KEY_PASSWORD }}
+    steps:
+      - id: gate
+        working-directory: .
+        run: |
+          if [ -n "$KEYSTORE_B64" ]; then echo "have=true" >> "$GITHUB_OUTPUT"; else echo "No NIVESH_KEYSTORE_BASE64 secret: skipping the Play bundle."; fi
+      - if: steps.gate.outputs.have == 'true'
+        uses: actions/checkout@v4
+      - if: steps.gate.outputs.have == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: nivesh-app/package-lock.json
+      - if: steps.gate.outputs.have == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - if: steps.gate.outputs.have == 'true'
+        name: Accept Android SDK licenses
+        working-directory: .
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+      - if: steps.gate.outputs.have == 'true'
+        run: npm ci
+      - if: steps.gate.outputs.have == 'true'
+        name: Write keystore and generate native project
+        run: |
+          echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/upload.jks"
+          export NIVESH_KEYSTORE_PATH="$RUNNER_TEMP/upload.jks"
+          echo "NIVESH_KEYSTORE_PATH=$NIVESH_KEYSTORE_PATH" >> "$GITHUB_ENV"
+          npx expo prebuild --platform android --no-install
+      - if: steps.gate.outputs.have == 'true'
+        name: Build signed release bundle (AAB)
+        working-directory: nivesh-app/android
+        run: ./gradlew bundleRelease --no-daemon
+      - if: steps.gate.outputs.have == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Nivesh-aab
+          path: nivesh-app/android/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 30

@@ -5,11 +5,22 @@ const TRIAL_KEY = "nivesh.trialStart";
 const WATCH_KEY = "nivesh.watchlist";
 const PAID_KEY = "nivesh.paid";
 const PORT_KEY = "nivesh.portfolio";
+const ENT_KEY = "nivesh.entitlement";
 export const TRIAL_DAYS = 7;
+
+export type Entitlement = { expiresAt: number; token: string };
+export async function getEntitlement(): Promise<Entitlement | null> {
+  try { const raw = await AsyncStorage.getItem(ENT_KEY); return raw ? JSON.parse(raw) : null; } catch { return null; }
+}
+export async function setEntitlement(e: Entitlement | null) {
+  try { e ? await AsyncStorage.setItem(ENT_KEY, JSON.stringify(e)) : await AsyncStorage.removeItem(ENT_KEY); } catch {}
+}
 
 export async function getAccess(): Promise<{ paid: boolean; trialDaysLeft: number }> {
   try {
     if ((await AsyncStorage.getItem(PAID_KEY)) === "1") return { paid: true, trialDaysLeft: 0 };
+    const ent = await getEntitlement();
+    if (ent && ent.expiresAt > Date.now()) return { paid: true, trialDaysLeft: 0 };
     let start = await AsyncStorage.getItem(TRIAL_KEY);
     if (!start) {
       start = String(Date.now());
@@ -22,7 +33,7 @@ export async function getAccess(): Promise<{ paid: boolean; trialDaysLeft: numbe
   }
 }
 
-// TODO: replace with Google Play Billing purchase verification (server-side).
+// Test-only unlock for sideloaded APKs (see ALLOW_TEST_UNLOCK). Real access comes from Google Play entitlements.
 export async function unlockForTesting() {
   await AsyncStorage.setItem(PAID_KEY, "1");
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Text } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { colors } from "./src/theme";
-import { getAccess, unlockForTesting } from "./src/store";
+import { useSubscription } from "./src/useSubscription";
 import { AppProvider } from "./src/state";
 import HomeScreen from "./src/screens/HomeScreen";
 import WatchlistScreen from "./src/screens/WatchlistScreen";
@@ -37,15 +37,15 @@ function Tabs({ trialLabel }: { trialLabel: string }) {
 }
 
 export default function App() {
-  const [access, setAccess] = useState<{ paid: boolean; trialDaysLeft: number } | null>(null);
-  useEffect(() => { getAccess().then(setAccess); }, []);
+  const sub = useSubscription();
+  const access = sub.access;
   if (!access) return null;
 
   if (!access.paid && access.trialDaysLeft <= 0) {
     return (
       <SafeAreaProvider>
         <StatusBar style="dark" />
-        <PaywallScreen onUnlock={async () => { await unlockForTesting(); setAccess(await getAccess()); }} />
+        <PaywallScreen plans={sub.plans} connected={sub.connected} busy={sub.busy} message={sub.message} onBuy={sub.buy} onRestore={sub.restore} onTestUnlock={sub.testUnlock} />
       </SafeAreaProvider>
     );
   }
