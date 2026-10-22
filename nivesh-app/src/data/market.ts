@@ -1,63 +1,52 @@
-// Market data layer. MockProvider returns SAMPLE data so the UI works offline.
-// Replace with a real provider (licensed delayed/EOD feed or broker API) by
-// implementing MarketProvider and swapping the export at the bottom.
+// Market data layer. UI talks only to `market`. Live data comes from yahoo.ts (delayed, unlicensed: dev/testing only);
+// if it fails we fall back to clearly-labelled SAMPLE data so the app never looks broken.
+import { INDEX_DEFS, StockDef, UNIVERSE } from "./stocks";
+
 export type Quote = {
-  symbol: string;
-  name: string;
-  sector: string;
-  price: number;
-  changePct: number;
-  history: number[];
+  symbol: string; name: string; sector: string; price: number; changePct: number; history: number[];
+  prevClose?: number; dayHigh?: number; dayLow?: number; high52?: number; low52?: number; volume?: number;
 };
+export type Range = "1D" | "1W" | "1M" | "3M" | "1Y" | "5Y";
+export const RANGES: Range[] = ["1D", "1W", "1M", "3M", "1Y", "5Y"];
+export type Detail = { quote: Quote; series: number[]; rangeChangePct: number };
 
 export interface MarketProvider {
   isSample: boolean;
   getIndices(): Promise<Quote[]>;
   getStocks(): Promise<Quote[]>;
+  getDetail(def: Pick<StockDef, "symbol" | "yahoo" | "name" | "sector">, range: Range): Promise<Detail>;
 }
 
-const walk = (start: number, drift: number, n = 30): number[] => {
-  const out = [start];
-  let seed = Math.round(start * 100) % 997;
-  for (let i = 1; i < n; i++) {
-    seed = (seed * 9301 + 49297) % 233280;
-    const r = seed / 233280 - 0.5;
-    out.push(+(out[i - 1] * (1 + drift + r * 0.02)).toFixed(2));
-  }
+// ---- sample data (deterministic pseudo-random walk) ----
+const POINTS: Record<Range, number> = { "1D": 60, "1W": 70, "1M": 22, "3M": 63, "1Y": 250, "5Y": 260 };
+const walk = (end: number, drift: number, n: number, seedStr: string): number[] => {
+  let seed = [...seedStr].reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 99991, 7);
+  const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280) - 0.5;
+  const out = [end];
+  for (let i = 1; i < n; i++) out.unshift(+(out[0] / (1 + drift + rnd() * 0.02)).toFixed(2));
   return out;
 };
-const q = (
-  symbol: string, name: string, sector: string, price: number, changePct: number,
-): Quote => ({ symbol, name, sector, price, changePct, history: walk(price * 0.93, changePct / 300) });
+export const sampleQuote = (d: Pick<StockDef, "symbol" | "name" | "sector" | "sample" | "sampleChg">): Quote => ({
+  symbol: d.symbol, name: d.name, sector: d.sector, price: d.sample, changePct: d.sampleChg,
+  history: walk(d.sample, d.sampleChg / 300, 30, d.symbol),
+  prevClose: +(d.sample / (1 + d.sampleChg / 100)).toFixed(2),
+  dayHigh: +(d.sample * 1.01).toFixed(2), dayLow: +(d.sample * 0.985).toFixed(2),
+  high52: +(d.sample * 1.25).toFixed(2), low52: +(d.sample * 0.72).toFixed(2),
+});
 
-const INDICES = [
-  q("NIFTY50", "Nifty 50", "Index", 24500, 0.42),
-  q("SENSEX", "Sensex", "Index", 80500, 0.38),
-  q("BANKNIFTY", "Nifty Bank", "Index", 52000, -0.21),
-];
-const STOCKS = [
-  q("RELIANCE", "Reliance Industries", "Energy", 2950, 1.8),
-  q("TCS", "Tata Consultancy Services", "IT", 3900, -0.6),
-  q("HDFCBANK", "HDFC Bank", "Banking", 1650, 0.9),
-  q("INFY", "Infosys", "IT", 1560, 2.4),
-  q("SBIN", "State Bank of India", "Banking", 820, -1.7),
-  q("TATAMOTORS", "Tata Motors", "Auto", 980, 3.1),
-  q("ITC", "ITC", "FMCG", 470, 0.3),
-  q("SUNPHARMA", "Sun Pharma", "Pharma", 1700, -2.2),
-  q("NTPC", "NTPC", "Power", 370, 1.2),
-  q("ADANIGREEN", "Adani Green Energy", "Renewable", 1800, -3.4),
-];
-
-const MockProvider: MarketProvider = {
+const sampleList = <T extends { sample: number }>(defs: T[]) => defs.map((d) => sampleQuote(d as any));
+export const MockProvider: MarketProvider = {
   isSample: true,
-  getIndices: async () => INDICES,
-  getStocks: async () => STOCKS,
+  getIndices: async () => sampleList(INDEX_DEFS),
+  getStocks: async () => sampleList(UNIVERSE),
+  getDetail: async (def, range) => {
+    const all = [...UNIVERSE, ...INDEX_DEFS];
+    const d = all.find((x) => x.symbol === def.symbol) ?? { ...def, sample: 1000, sampleChg: 0 };
+    const quote = sampleQuote(d as any);
+    const series = walk(quote.price, (range === "1D" ? 0.0002 : d.sampleChg / 300) * (range === "5Y" ? 8 : 1), POINTS[range], def.symbol + range);
+    return { quote, series, rangeChangePct: ((series[series.length - 1] - series[0]) / series[0]) * 100 };
+  },
 };
-// Live data (delayed) with automatic fallback to sample data if the network/API fails.
-// Set EXPO_PUBLIC_USE_SAMPLE_DATA=1 to force sample data.
-import { withFallback, yahooLive } from "./yahoo";
-export const market: MarketProvider =
-  process.env.EXPO_PUBLIC_USE_SAMPLE_DATA === "1" ? MockProvider : withFallback(yahooLive, MockProvider);
 
 export const sectorTrends = (stocks: Quote[]) => {
   const m = new Map<string, number[]>();
@@ -66,3 +55,8 @@ export const sectorTrends = (stocks: Quote[]) => {
     .map(([sector, v]) => ({ sector, avg: v.reduce((a, b) => a + b, 0) / v.length }))
     .sort((a, b) => b.avg - a.avg);
 };
+
+// Live data (delayed) with automatic fallback to sample data. EXPO_PUBLIC_USE_SAMPLE_DATA=1 forces sample data.
+import { withFallback, yahooLive } from "./yahoo";
+export const market: MarketProvider =
+  process.env.EXPO_PUBLIC_USE_SAMPLE_DATA === "1" ? MockProvider : withFallback(yahooLive, MockProvider);

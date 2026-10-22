@@ -1,0 +1,35 @@
+export type StockDef = { symbol: string; yahoo: string; name: string; sector: string; sample: number; sampleChg: number };
+// Large Indian companies (NSE). `sample`/`sampleChg` are only used for offline demo data.
+export const UNIVERSE: StockDef[] = [
+  { symbol: "RELIANCE", yahoo: "RELIANCE.NS", name: "Reliance Industries", sector: "Energy", sample: 2950, sampleChg: 1.8 },
+  { symbol: "TCS", yahoo: "TCS.NS", name: "Tata Consultancy Services", sector: "IT", sample: 3900, sampleChg: -0.6 },
+  { symbol: "HDFCBANK", yahoo: "HDFCBANK.NS", name: "HDFC Bank", sector: "Banking", sample: 1650, sampleChg: 0.9 },
+  { symbol: "INFY", yahoo: "INFY.NS", name: "Infosys", sector: "IT", sample: 1560, sampleChg: 2.4 },
+  { symbol: "ICICIBANK", yahoo: "ICICIBANK.NS", name: "ICICI Bank", sector: "Banking", sample: 1220, sampleChg: 0.5 },
+  { symbol: "SBIN", yahoo: "SBIN.NS", name: "State Bank of India", sector: "Banking", sample: 820, sampleChg: -1.7 },
+  { symbol: "BHARTIARTL", yahoo: "BHARTIARTL.NS", name: "Bharti Airtel", sector: "Telecom", sample: 1580, sampleChg: 1.1 },
+  { symbol: "ITC", yahoo: "ITC.NS", name: "ITC", sector: "FMCG", sample: 470, sampleChg: 0.3 },
+  { symbol: "LT", yahoo: "LT.NS", name: "Larsen & Toubro", sector: "Infra", sample: 3600, sampleChg: 0.7 },
+  { symbol: "HINDUNILVR", yahoo: "HINDUNILVR.NS", name: "Hindustan Unilever", sector: "FMCG", sample: 2400, sampleChg: -0.4 },
+  { symbol: "KOTAKBANK", yahoo: "KOTAKBANK.NS", name: "Kotak Mahindra Bank", sector: "Banking", sample: 1800, sampleChg: 0.2 },
+  { symbol: "AXISBANK", yahoo: "AXISBANK.NS", name: "Axis Bank", sector: "Banking", sample: 1150, sampleChg: -0.9 },
+  { symbol: "BAJFINANCE", yahoo: "BAJFINANCE.NS", name: "Bajaj Finance", sector: "Finance", sample: 7000, sampleChg: 1.5 },
+  { symbol: "MARUTI", yahoo: "MARUTI.NS", name: "Maruti Suzuki", sector: "Auto", sample: 12500, sampleChg: -0.3 },
+  { symbol: "TATAMOTORS", yahoo: "TATAMOTORS.NS", name: "Tata Motors", sector: "Auto", sample: 980, sampleChg: 3.1 },
+  { symbol: "SUNPHARMA", yahoo: "SUNPHARMA.NS", name: "Sun Pharma", sector: "Pharma", sample: 1700, sampleChg: -2.2 },
+  { symbol: "TATASTEEL", yahoo: "TATASTEEL.NS", name: "Tata Steel", sector: "Metals", sample: 150, sampleChg: 1.9 },
+  { symbol: "NTPC", yahoo: "NTPC.NS", name: "NTPC", sector: "Power", sample: 370, sampleChg: 1.2 },
+  { symbol: "POWERGRID", yahoo: "POWERGRID.NS", name: "Power Grid Corp", sector: "Power", sample: 320, sampleChg: 0.6 },
+  { symbol: "ONGC", yahoo: "ONGC.NS", name: "ONGC", sector: "Energy", sample: 270, sampleChg: -0.8 },
+  { symbol: "ADANIGREEN", yahoo: "ADANIGREEN.NS", name: "Adani Green Energy", sector: "Renewable", sample: 1800, sampleChg: -3.4 },
+  { symbol: "WIPRO", yahoo: "WIPRO.NS", name: "Wipro", sector: "IT", sample: 520, sampleChg: 1.0 },
+  { symbol: "HCLTECH", yahoo: "HCLTECH.NS", name: "HCL Technologies", sector: "IT", sample: 1700, sampleChg: 0.4 },
+  { symbol: "TITAN", yahoo: "TITAN.NS", name: "Titan Company", sector: "Consumer", sample: 3500, sampleChg: -1.1 },
+  { symbol: "ASIANPAINT", yahoo: "ASIANPAINT.NS", name: "Asian Paints", sector: "Consumer", sample: 2500, sampleChg: 0.8 },
+  { symbol: "COALINDIA", yahoo: "COALINDIA.NS", name: "Coal India", sector: "Energy", sample: 430, sampleChg: 2.0 },
+];
+export const INDEX_DEFS = [
+  { symbol: "NIFTY50", yahoo: "^NSEI", name: "Nifty 50", sector: "Index", sample: 24500, sampleChg: 0.42 },
+  { symbol: "SENSEX", yahoo: "^BSESN", name: "Sensex", sector: "Index", sample: 80500, sampleChg: 0.38 },
+  { symbol: "BANKNIFTY", yahoo: "^NSEBANK", name: "Nifty Bank", sector: "Index", sample: 52000, sampleChg: -0.21 },
+];

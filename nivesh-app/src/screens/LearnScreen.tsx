@@ -34,7 +34,7 @@ export default function LearnScreen() {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: colors.bg }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: colors.onAccent }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView ref={scroll} style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }} keyboardShouldPersistTaps="handled">
         <H>Ask the AI explainer</H>
         <Text style={s.muted}>Plain-language answers about investing concepts. It explains; it does not tell you what to buy or predict returns.</Text>
@@ -66,7 +66,7 @@ export default function LearnScreen() {
             onSubmitEditing={() => ask(q)} returnKeyType="send"
           />
           <Pressable style={[s.send, (!q.trim() || busy || !explainerConfigured) && { opacity: 0.4 }]} onPress={() => ask(q)} disabled={!q.trim() || busy || !explainerConfigured} accessibilityLabel="Send question">
-            <Text style={{ color: colors.bg, fontWeight: "800" }}>Ask</Text>
+            <Text style={{ color: colors.onAccent, fontWeight: "800" }}>Ask</Text>
           </Pressable>
         </View>
 

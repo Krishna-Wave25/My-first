@@ -1,8 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { emptyPortfolio, Portfolio } from "./portfolio";
 
 const TRIAL_KEY = "nivesh.trialStart";
 const WATCH_KEY = "nivesh.watchlist";
 const PAID_KEY = "nivesh.paid";
+const PORT_KEY = "nivesh.portfolio";
 export const TRIAL_DAYS = 7;
 
 export async function getAccess(): Promise<{ paid: boolean; trialDaysLeft: number }> {
@@ -26,12 +28,18 @@ export async function unlockForTesting() {
 }
 
 export async function getWatchlist(): Promise<string[]> {
-  try {
-    return JSON.parse((await AsyncStorage.getItem(WATCH_KEY)) ?? "[]");
-  } catch {
-    return [];
-  }
+  try { return JSON.parse((await AsyncStorage.getItem(WATCH_KEY)) ?? "[]"); } catch { return []; }
 }
 export async function setWatchlist(list: string[]) {
   try { await AsyncStorage.setItem(WATCH_KEY, JSON.stringify(list)); } catch {}
+}
+
+export async function getPortfolio(): Promise<Portfolio> {
+  try {
+    const raw = await AsyncStorage.getItem(PORT_KEY);
+    return raw ? { ...emptyPortfolio(), ...JSON.parse(raw) } : emptyPortfolio();
+  } catch { return emptyPortfolio(); }
+}
+export async function setPortfolio(p: Portfolio) {
+  try { await AsyncStorage.setItem(PORT_KEY, JSON.stringify(p)); } catch {}
 }

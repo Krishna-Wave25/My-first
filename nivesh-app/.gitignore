@@ -43,3 +43,7 @@ yarn-error.*
 # server secrets
 server/.env
 server/node_modules/
+
+# generated native projects (built in CI via `expo prebuild`)
+/android/
+/ios/

@@ -1,0 +1,72 @@
+name: Build Nivesh Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ccr-97aede0d-8xeiml]
+    paths: ["nivesh-app/**", ".github/workflows/build-android-apk.yml"]
+
+permissions:
+  contents: write   # to publish the APK as a GitHub Release
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: nivesh-app
+    env:
+      # Optional: set these in GitHub -> Settings -> Secrets and variables -> Actions
+      EXPO_PUBLIC_API_URL: ${{ vars.NIVESH_API_URL }}
+      EXPO_PUBLIC_APP_KEY: ${{ secrets.NIVESH_APP_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: nivesh-app/package-lock.json
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Generate native Android project
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Build release APK
+        working-directory: nivesh-app/android
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: Name the APK
+        run: |
+          mkdir -p out
+          cp android/app/build/outputs/apk/release/*.apk out/Nivesh.apk
+          ls -lh out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Nivesh-apk
+          path: nivesh-app/out/Nivesh.apk
+          retention-days: 30
+
+      - name: Publish as a GitHub Release (easy download on your phone)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="nivesh-apk-${{ github.run_number }}"
+          gh release create "$TAG" out/Nivesh.apk \
+            --repo "${{ github.repository }}" \
+            --title "Nivesh APK build ${{ github.run_number }}" \
+            --notes "Android APK built from commit ${{ github.sha }}. Install on your phone (allow 'install unknown apps' for your browser). Uses sample data if the live feed is unreachable."

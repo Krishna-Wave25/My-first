@@ -26,5 +26,5 @@ const s = StyleSheet.create({
   p: { color: colors.muted, lineHeight: 20, fontSize: 13 },
   price: { color: colors.accent, fontSize: 28, fontWeight: "800", marginBottom: 6 },
   btn: { backgroundColor: colors.accent, borderRadius: radius, padding: 16, marginVertical: 16 },
-  btnText: { color: colors.bg, fontWeight: "800", textAlign: "center" },
+  btnText: { color: colors.onAccent, fontWeight: "800", textAlign: "center" },
 });

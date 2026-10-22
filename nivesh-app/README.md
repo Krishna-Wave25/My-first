@@ -8,8 +8,13 @@ Free-to-install Android app (Expo / React Native, TypeScript) for stock-market e
 2. On a computer with Node 20+: `cd nivesh-app && npm install && npx expo start`
 3. Scan the QR code with Expo Go. (Phone and computer on the same Wi-Fi.)
 
-## Build an installable APK
-`npx eas-cli build -p android --profile preview` (needs a free Expo account).
+## Build an installable APK (no computer needed)
+GitHub builds it for you: repo -> **Actions** -> **Build Nivesh Android APK** -> **Run workflow**.
+After ~10-15 min the APK appears under **Releases** (`Nivesh.apk`) and as a run artifact. Open the release on your phone,
+download `Nivesh.apk`, and allow "install unknown apps" for your browser when asked.
+This APK is signed with the default debug key: fine for testing on your own phone, not for the Play Store.
+For the Play Store you need your own upload keystore and an AAB (`./gradlew bundleRelease`).
+To make the AI explainer work in the APK, add repo variable `NIVESH_API_URL` and secret `NIVESH_APP_KEY` (Settings -> Secrets and variables -> Actions).
 
 ## Data
 Prices come from Yahoo Finance (delayed ~15 min). If the network/API fails the app falls back to clearly labelled SAMPLE data. Force sample data with `EXPO_PUBLIC_USE_SAMPLE_DATA=1`. Results are cached for 60 s.

@@ -1,14 +1,20 @@
+// Light, clean "investing app" look. Tokens used everywhere; change here to re-skin.
 export const colors = {
-  bg: "#0B1220",
-  card: "#121B2E",
-  border: "#1F2B45",
-  text: "#EAF0FF",
-  muted: "#8A98B8",
-  accent: "#3DDC97",
-  up: "#3DDC97",
-  down: "#FF5C7A",
-  warn: "#FFC857",
+  bg: "#FFFFFF",
+  surface: "#F5F6F8",
+  card: "#FFFFFF",
+  border: "#E7E9EE",
+  text: "#1B1E2B",
+  muted: "#7C7F8E",
+  accent: "#00B386",
+  onAccent: "#FFFFFF",
+  accentSoft: "#E6F8F3",
+  up: "#00B386",
+  down: "#EB5B3C",
+  warn: "#E8A317",
 };
 export const radius = 14;
 export const inr = (n: number) =>
-  "₹" + n.toLocaleString("en-IN", { maximumFractionDigits: 2 });
+  "₹" + n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+export const inr0 = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
+export const pct = (n: number) => `${n >= 0 ? "+" : ""}${n.toFixed(2)}%`;
