@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, Text, View, StyleSheet } from "react-native";
 import { market, Quote, sectorTrends } from "../data/market";
 import { colors } from "../theme";
-import { Card, H, Disclaimer, SampleBadge } from "../components/ui";
+import { Card, H, Disclaimer, DataBadge } from "../components/ui";
 import { StockRow } from "../components/StockRow";
 
 export default function MarketScreen({ watch, toggle }: { watch: string[]; toggle: (s: string) => void }) {
@@ -16,7 +16,7 @@ export default function MarketScreen({ watch, toggle }: { watch: string[]; toggl
   const gainers = sorted.slice(0, 3), losers = sorted.slice(-3).reverse();
   return (
     <ScrollView style={s.page} contentContainerStyle={{ padding: 16 }}>
-      {market.isSample && <SampleBadge />}
+      <DataBadge sample={market.isSample} />
       <H>Market overview</H>
       <View style={{ flexDirection: "row", gap: 8, marginBottom: 10 }}>
         {indices.map((i) => (

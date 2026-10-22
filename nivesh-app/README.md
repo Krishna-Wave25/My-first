@@ -11,12 +11,15 @@ Free-to-install Android app (Expo / React Native, TypeScript) for stock-market e
 ## Build an installable APK
 `npx eas-cli build -p android --profile preview` (needs a free Expo account).
 
+## Data
+Prices come from Yahoo Finance (delayed ~15 min). If the network/API fails the app falls back to clearly labelled SAMPLE data. Force sample data with `EXPO_PUBLIC_USE_SAMPLE_DATA=1`. Results are cached for 60 s.
+
 ## What works now
 Market overview (indices, gainers/losers, sector trends), watchlist, screener (sector / direction filters),
 "Where can I invest?" by amount (education only), lessons, 7-day trial and paywall (test mode).
 
 ## Before public launch (not done yet)
-- Replace `MockProvider` in `src/data/market.ts` with a licensed delayed/EOD data feed (all prices are SAMPLE data now).
+- Replace the Yahoo Finance provider (`src/data/yahoo.ts`) with a licensed delayed/EOD data vendor or broker API. Yahoo's public endpoint is unofficial and not licensed for a paid app; it is for development/testing only.
 - Real payments via Google Play Billing + server-side verification (`src/store.ts` unlock is test-only).
 - AI explainer via a backend that holds the API key (never ship the key in the app).
 - Privacy policy, Play Store listing, final app name / trademark check, disclaimer review.

@@ -53,7 +53,11 @@ const MockProvider: MarketProvider = {
   getIndices: async () => INDICES,
   getStocks: async () => STOCKS,
 };
-export const market: MarketProvider = MockProvider;
+// Live data (delayed) with automatic fallback to sample data if the network/API fails.
+// Set EXPO_PUBLIC_USE_SAMPLE_DATA=1 to force sample data.
+import { withFallback, yahooLive } from "./yahoo";
+export const market: MarketProvider =
+  process.env.EXPO_PUBLIC_USE_SAMPLE_DATA === "1" ? MockProvider : withFallback(yahooLive, MockProvider);
 
 export const sectorTrends = (stocks: Quote[]) => {
   const m = new Map<string, number[]>();

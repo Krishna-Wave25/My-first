@@ -27,8 +27,10 @@ export const Spark = ({ data, up }: { data: number[]; up: boolean }) => {
   );
 };
 
-export const SampleBadge = () => (
-  <Text style={s.badge}>SAMPLE DATA – connect a live feed before launch</Text>
+export const DataBadge = ({ sample }: { sample: boolean }) => (
+  <Text style={[s.badge, !sample && { color: colors.muted }]}>
+    {sample ? "SAMPLE DATA – live feed unavailable, showing demo numbers" : "Delayed data (about 15 min). For information only."}
+  </Text>
 );
 
 const s = StyleSheet.create({

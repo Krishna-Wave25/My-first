@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View, StyleSheet } from "react-native";
 import { market, Quote } from "../data/market";
 import { colors } from "../theme";
-import { Card, H, Disclaimer } from "../components/ui";
+import { Card, H, Disclaimer, DataBadge } from "../components/ui";
 import { StockRow } from "../components/StockRow";
 
 export default function ScreenerScreen() {
@@ -22,6 +22,7 @@ export default function ScreenerScreen() {
   );
   return (
     <ScrollView style={s.page} contentContainerStyle={{ padding: 16 }}>
+      <DataBadge sample={market.isSample} />
       <H>Stock screener</H>
       <View style={s.wrap}>{sectors.map((x) => <Chip key={x} label={x} on={sector === x} press={() => setSector(x)} />)}</View>
       <View style={s.wrap}>
